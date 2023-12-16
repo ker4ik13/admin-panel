@@ -1,73 +1,70 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Документация
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Проект создан на стеке:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<div>
+  <a href="https://www.typescriptlang.org">
+    <img src="https://img.shields.io/badge/TypeScript-ts?logo=TypeScript&logoColor=white&color=blue&style=for-the-badge" alt="TypeScript"/>
+  </a>
+  <a href="https://nestjs.com">
+    <img src="https://img.shields.io/badge/Nest_JS-nest?logo=NestJS&logoColor=white&color=red&style=for-the-badge" alt="Nest JS"/>
+  </a>
+  <a href="https://www.mongodb.com">
+    <img src="https://img.shields.io/badge/Mongo_DB-mongo?logo=MongoDB&logoColor=white&color=green&style=for-the-badge" alt="MongoDB"/>
+  </a>
+</div>
 
-## Description
+В проекте использованы:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+<div>
+  <a href="https://eslint.org">
+    <img src="https://img.shields.io/badge/ESLint-eslint?logo=ESLint&logoColor=white&color=purple&style=for-the-badge" alt="ESLint"/>
+  </a>
+  <a href="https://prettier.io">
+    <img src="https://img.shields.io/badge/Prettier-prettier?logo=Prettier&logoColor=white&color=purple&style=for-the-badge" alt="Prettier"/>
+  </a>
+</div>
 
-## Installation
+---
 
-```bash
-$ npm install
-```
+### Документация для серверной части:
 
-## Running the app
+#### Установка зависимостей
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Test
+или
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+yarn
 ```
 
-## Support
+#### Запуск проекта в режиме разработки
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run start:dev
+```
 
-## Stay in touch
+или
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+yarn start:dev
+```
 
-## License
+#### Запуск проекта в режиме production
 
-Nest is [MIT licensed](LICENSE).
+```bash
+npm run start:prod
+```
+
+или
+
+```bash
+yarn start:prod
+```
+
+---
+
+Автор: **[Кирилл Киреев](https://t.me/ker4ik13)**.

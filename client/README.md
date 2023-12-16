@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Документация
 
-## Getting Started
+Проект создан на стеке:
 
-First, run the development server:
+<div>
+  <a href="https://www.typescriptlang.org">
+    <img src="https://img.shields.io/badge/TypeScript-ts?logo=TypeScript&logoColor=white&color=blue&style=for-the-badge" alt="TypeScript"/>
+  </a>
+  <a href="https://nextjs.org">
+    <img src="https://img.shields.io/badge/Next.JS-000000?&logo=nextdotjs&logoColor=white&style=for-the-badge" alt="Next.JS"/>
+  </a>
+  <a href="https://react.dev">
+    <img src="https://img.shields.io/badge/React_JS-react?logo=React&logoColor=white&color=blue&style=for-the-badge" alt="React JS"/>
+  </a>
+</div>
+
+В проекте использованы:
+
+<div>
+  <a href="https://eslint.org">
+    <img src="https://img.shields.io/badge/ESLint-eslint?logo=ESLint&logoColor=white&color=purple&style=for-the-badge" alt="ESLint"/>
+  </a>
+  <a href="https://prettier.io">
+    <img src="https://img.shields.io/badge/Prettier-prettier?logo=Prettier&logoColor=white&color=purple&style=for-the-badge" alt="Prettier"/>
+  </a>
+</div>
+
+---
+
+### Документация для клиентской части:
+
+#### Установка зависимостей
+
+```bash
+npm install
+```
+
+или
+
+```bash
+yarn
+```
+
+#### Запуск проекта в режиме разработки
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+или
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+yarn dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+#### Запуск проекта в режиме production
 
-## Learn More
+```bash
+npm run start
+```
 
-To learn more about Next.js, take a look at the following resources:
+или
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+yarn start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Архитектура приложения: [Feature Sliced Design](https://feature-sliced.design/ru/).
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Автор: **[Кирилл Киреев](https://t.me/ker4ik13)**.
