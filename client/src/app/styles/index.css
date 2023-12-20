@@ -31,6 +31,7 @@
   --green: 115, 188, 88;
   --red: 221, 56, 43;
   --orange: 215, 131, 55;
+  --sidebar-width: 15.625rem;
 }
 
 body.dark {
@@ -40,4 +41,8 @@ body.dark {
   --bg-color-dark-main: 234, 242, 251;
   --text-color-light: 17, 17, 17;
   --text-color-dark: 254, 254, 254;
+}
+main[data-tag="main"] {
+  margin-left: var(--sidebar-width);
+  transition: 0.3s ease-in-out;
 }

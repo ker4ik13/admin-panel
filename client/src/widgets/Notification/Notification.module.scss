@@ -1,12 +1,6 @@
 @import "@/shared/styles/_vars";
 
 .notification {
-  position: fixed;
-  bottom: rem(20);
-  right: 0;
-  transform: translate(200%, 0);
-
-  background-color: #fff;
   border-radius: rem(8);
   padding: rem(10) rem(20);
   display: flex;
@@ -16,14 +10,9 @@
   backdrop-filter: blur(8px);
   transition: transform 0.3s ease-in;
 
-  &.open {
-    transform: translate(rem(-20), 0);
-  }
-
-  & svg {
-    width: rem(30);
-    height: 100%;
-  }
+  // &.open {
+  //   transform: translate(rem(-20), 0);
+  // }
 
   &.success {
     background-color: rgba(var(--green), 1);

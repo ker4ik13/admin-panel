@@ -1,15 +1,24 @@
 @import "@/shared/styles/_vars";
 
 .header {
-  margin-left: rem(250);
+  margin-left: var(--sidebar-width);
   padding: rem(20) rem(20);
   display: flex;
   align-items: center;
   justify-content: flex-end;
   background-color: rgb(var(--bg-color-light));
   max-height: rem(100);
-
+  overflow: visible;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 10;
   @include theme-transition();
+  transition: margin-left 0.3s ease-in-out;
+
+  &.close {
+    background-color: red;
+  }
 }
 .messages {
   height: 100%;
@@ -35,6 +44,11 @@
     @media screen and (prefers-color-scheme: dark) {
       color: rgb(var(--bg-color-light));
     }
+  }
+
+  &:focus {
+    outline: 1px solid rgb(var(--bg-color-dark));
+    border: 0;
   }
 
   & svg {
@@ -67,6 +81,12 @@
 
   &:hover {
     opacity: 0.8;
+  }
+
+  &:focus {
+    outline: 1px solid rgb(var(--bg-color-dark));
+    border: 0;
+    border-radius: rem(50);
   }
 }
 .dropDown {
@@ -112,5 +132,10 @@
   &.active {
     background-color: $accent;
     color: #fff;
+  }
+
+  &:focus {
+    outline: 1px solid rgb(var(--bg-color-dark));
+    border: 0;
   }
 }

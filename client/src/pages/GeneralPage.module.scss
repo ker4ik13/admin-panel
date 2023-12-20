@@ -1,11 +1,15 @@
 @import "@/shared/styles/_vars";
 
 .page {
-  margin-left: rem(250);
   padding: rem(20);
   background-color: rgb(var(--bg-color-light-main));
-  min-height: calc(100vh - rem(81));
+  min-height: calc(100vh - rem(72));
   position: relative;
+  transition: 0.3s ease-in-out;
+}
+.container {
+  @include container();
+  margin-left: 0;
 }
 .title {
   @include inter();
@@ -13,6 +17,10 @@
   font-weight: 600;
   display: inline;
   color: rgb(var(--text-color-dark));
+  position: -webkit-sticky;
+  position: sticky;
+  top: rem(22);
+  z-index: 11;
 }
 
 // Настройки
@@ -159,4 +167,82 @@
   display: flex;
   gap: rem(20);
   margin-top: rem(20);
+}
+.tableWrapper {
+  width: 100%;
+  background-color: rgb(var(--bg-color-light));
+  color: rgb(var(--text-color-dark));
+  padding: rem(20) 0;
+  font-weight: 500;
+  border-radius: rem(12);
+  overflow: auto;
+}
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.responsesTable {
+  border-collapse: collapse;
+  width: 100%;
+
+  & thead {
+    width: 100%;
+  }
+
+  & th {
+    white-space: nowrap;
+    line-height: 1.5;
+    min-height: rem(50);
+    padding: rem(10);
+    text-align: left;
+    border-bottom: 1px solid rgba(var(--bg-color-dark), 0.4);
+    font-weight: 500;
+    padding-left: 0;
+    width: auto;
+
+    & span {
+      cursor: text;
+    }
+
+    &:first-child {
+      padding-left: rem(20);
+    }
+  }
+
+  & tr {
+    width: 100%;
+    vertical-align: middle;
+    padding: rem(10);
+    transition: 0.2s;
+
+    &:first-child:hover {
+      background-color: rgba(var(--bg-color-dark), 0);
+    }
+
+    &:hover {
+      background-color: rgba(var(--bg-color-dark), 0.2);
+    }
+  }
+
+  & td {
+    white-space: nowrap;
+    padding: rem(10);
+    border-bottom: 1px solid rgba(var(--bg-color-dark), 0.4);
+
+    & span {
+      cursor: text;
+    }
+
+    &:first-child {
+      padding-left: rem(20);
+    }
+  }
+}
+.tableTitle {
+  text-align: left;
+  font-size: rem(20);
+  font-weight: 600;
+  margin-bottom: rem(10);
+  margin-left: rem(20);
+  cursor: text;
 }

@@ -13,21 +13,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='ru'>
+    <html lang="ru">
       <meta
-        name='theme-color'
-        media='(prefers-color-scheme: light)'
-        content='eaf2fb'
+        name="theme-color"
+        media="(prefers-color-scheme: light)"
+        content="eaf2fb"
       />
       <meta
-        name='theme-color'
-        media='(prefers-color-scheme: dark)'
-        content='18191b'
+        name="theme-color"
+        media="(prefers-color-scheme: dark)"
+        content="18191b"
       />
       <body>
         <Header />
         <Sidebar />
-        <main>{children}</main>
+        <main data-tag="main">{children}</main>
       </body>
     </html>
   );

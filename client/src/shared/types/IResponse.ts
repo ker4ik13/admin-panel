@@ -4,5 +4,5 @@ export interface IResponse {
   name: string;
   tgLink: string;
   product: string;
-  createdAd: string;
+  createdAt: string;
 }

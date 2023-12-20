@@ -12,6 +12,11 @@ import { IoMdSettings } from "react-icons/io";
 import { IoLogOut } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 import { getTheme } from "@/features/getTheme";
+import Unavailable from "@/shared/Unavailable/Unavailable";
+import { showNotification } from "@/widgets/Notification/utils/showNotification";
+
+import { ToastContainer } from "react-toastify";
+import { language, translate } from "@/data/translate";
 
 export const Header = () => {
   const pathName = usePathname();
@@ -25,6 +30,14 @@ export const Header = () => {
     }
   };
 
+  const showDontWorkingNotification = () => {
+    showNotification("Страница пока недоступна", {
+      type: "error",
+      autoClose: 3000,
+      theme: getTheme() ? "dark" : "light",
+    });
+  };
+
   useEffect(() => {
     getTheme();
   }, []);
@@ -34,17 +47,30 @@ export const Header = () => {
   };
 
   return (
-    <header className={s.header}>
+    <header className={s.header} data-tag="header">
+      <ToastContainer />
       <div className={s.messages}>
-        <Link href={"#"} className={s.messageLink}>
-          <IoMailOutline />
-        </Link>
-        <Link href={"#"} className={s.messageLink}>
-          <IoIosNotificationsOutline />
-        </Link>
+        <Unavailable onClick={showDontWorkingNotification}>
+          <Link
+            href={"#"}
+            className={s.messageLink}
+            title={translate.header.letters[language]}
+          >
+            <IoMailOutline />
+          </Link>
+          <Link
+            href={"#"}
+            className={s.messageLink}
+            title={translate.header.notifications[language]}
+          >
+            <IoIosNotificationsOutline />
+          </Link>
+        </Unavailable>
       </div>
       <div className={s.account}>
-        <p className={s.name}>Привет, {userName}</p>
+        <p className={s.name}>
+          {translate.header.hello[language]}, {userName}
+        </p>
         <button className={s.userButton} onClick={handleOpen}>
           <Image
             className={s.userImage}
@@ -55,18 +81,26 @@ export const Header = () => {
           />
         </button>
         <div className={s.dropDown} ref={dropdownList}>
-          <Link href={"#"} className={isActivePage("#")}>
-            <FaUser />
-            <span>Мой профиль</span>
-          </Link>
-          <Link href={"/settings"} className={isActivePage("/settings")}>
+          <Unavailable onClick={showDontWorkingNotification}>
+            <Link href={"#"} className={isActivePage("#")} onClick={handleOpen}>
+              <FaUser />
+              <span>{translate.header.myProfile[language]}</span>
+            </Link>
+          </Unavailable>
+          <Link
+            href={"/settings"}
+            className={isActivePage("/settings")}
+            onClick={handleOpen}
+          >
             <IoMdSettings />
-            <span>Настройки</span>
+            <span>{translate.header.settings[language]}</span>
           </Link>
-          <Link href={"#"} className={isActivePage("#")}>
-            <IoLogOut />
-            <span>Выход</span>
-          </Link>
+          <Unavailable onClick={showDontWorkingNotification}>
+            <Link href={"#"} className={isActivePage("#")} onClick={handleOpen}>
+              <IoLogOut />
+              <span>{translate.header.logout[language]}</span>
+            </Link>
+          </Unavailable>
         </div>
       </div>
     </header>
