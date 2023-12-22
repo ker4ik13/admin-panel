@@ -11,6 +11,14 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+/nest-server
+nest-server
+nest-server/
+
+/express-server
+express-server
+express-server/
+
 # OS
 .DS_Store
 
