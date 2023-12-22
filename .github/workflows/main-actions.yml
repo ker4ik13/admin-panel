@@ -17,18 +17,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Переход в папку клиента
-        run: cd ./client
       - name: Установка зависимостей для клиента
-        run: npm install
-      - name: Проверка ESLint
-        run: npm run lint
-      - name: Сборка проекта
-        run: npm run build
-      - name: Переход в папку клиента
-        run: cd ../server
-      - name: Установка зависимостей для сервера
-        run: npm install
+        run: >
+          cd ./client
+          npm install
       - name: Проверка ESLint
         run: npm run lint
       - name: Сборка проекта
