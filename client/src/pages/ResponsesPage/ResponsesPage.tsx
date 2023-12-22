@@ -1,7 +1,7 @@
 import { mockResponses } from "@/data/mockResponses";
 import s from "../GeneralPage.module.scss";
 
-export const ResponsesPage = () => {
+const ResponsesPage = () => {
   return (
     <div className={s.page}>
       <div className={s.container}>
@@ -80,3 +80,5 @@ export const ResponsesPage = () => {
     </div>
   );
 };
+
+export default ResponsesPage;

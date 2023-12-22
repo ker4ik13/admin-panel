@@ -5,7 +5,7 @@ import { getTheme } from "@/features/getTheme";
 import { showNotification } from "@/widgets/Notification/utils/showNotification";
 import { language, translate } from "@/data/translate";
 
-export const SettingsPage = () => {
+const SettingsPage = () => {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -65,3 +65,5 @@ export const SettingsPage = () => {
     </div>
   );
 };
+
+export default SettingsPage;

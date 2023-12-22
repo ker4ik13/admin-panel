@@ -1,4 +1,4 @@
-import { SettingsPage } from "@/pages/SettingsPage/SettingsPage";
+import SettingsPage from "@/pages/SettingsPage/SettingsPage";
 
 const page = () => {
   return <SettingsPage />;

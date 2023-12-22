@@ -1,5 +1,11 @@
-import type { AuthResponse } from "@/types/response/AuthResponse";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import type { IUser } from "@/shared/types/IUser";
+import axios from "axios";
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: IUser;
+}
 
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || '';
@@ -27,6 +33,7 @@ $api.interceptors.response.use((config) => {
             localStorage.setItem('token', response.data.accessToken);
             return $api.request(originalRequest);
         } catch (e) {
+            // TODO: доделать
             console.log('НЕ АВТОРИЗОВАН')
         }
     }

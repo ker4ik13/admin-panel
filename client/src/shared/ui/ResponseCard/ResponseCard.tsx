@@ -18,8 +18,8 @@ export const ResponseCard = ({ response }: Props) => {
         <FaRegUser />
         <p className={s.name}>{response.name}</p>
       </div>
-      <time dateTime={response.createdAd} className={s.date}>
-        {response.createdAd}
+      <time dateTime={response.createdAt} className={s.date}>
+        {response.createdAt}
       </time>
       <div className={s.infoString}>
         <CiShoppingTag />

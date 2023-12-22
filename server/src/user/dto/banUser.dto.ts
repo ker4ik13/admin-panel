@@ -1,4 +1,4 @@
-import { IsString, MinLength, isNotEmpty } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 
 export class BanUserDto {
   readonly userId: string;

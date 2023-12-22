@@ -1,4 +1,4 @@
-import { HelpPage } from "@/pages/HelpPage/HelpPage";
+import HelpPage from "@/pages/HelpPage/HelpPage";
 
 const page = () => {
   return <HelpPage />;
