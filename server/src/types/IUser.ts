@@ -11,4 +11,6 @@ export interface IUser {
   isActivated: boolean;
   activationLink?: string;
   createdAt: string;
+  isBanned?: boolean;
+  banReason?: string;
 }

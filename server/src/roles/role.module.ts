@@ -14,7 +14,12 @@ import { JwtModule } from '@nestjs/jwt';
       { name: User.name, schema: UserSchema },
       { name: UserRole.name, schema: UserRoleSchema },
     ]),
-    JwtModule,
+    JwtModule.register({
+      secret: process.env.SECRET_KEY || 'secret-key',
+      signOptions: {
+        expiresIn: process.env.NODE_ENV === 'development' ? '24h' : '30m',
+      },
+    }),
   ],
   providers: [RoleService],
   controllers: [RoleController],

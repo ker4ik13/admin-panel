@@ -8,12 +8,14 @@ import CreateUserDto from 'src/user/dto/createUser.dto';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { LoginUserDto } from 'src/user/dto/loginUser.dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async login(userDto: LoginUserDto) {
@@ -26,9 +28,11 @@ export class AuthService {
     const candidate = await this.userService.getUserByEmail(userDto.email);
 
     if (candidate) {
-      throw new BadRequestException(
-        `Пользователь с почтовым адресом ${userDto.email} уже существует.`,
-      );
+      throw new BadRequestException({
+        message: [
+          `Пользователь с почтовым адресом ${userDto.email} уже существует.`,
+        ],
+      });
     }
     // Хеширование пароля и сохранение пользователя
     const hashPassword = await bcrypt.hash(userDto.password, 3);

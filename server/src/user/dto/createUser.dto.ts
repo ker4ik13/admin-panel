@@ -6,7 +6,7 @@ export default class CreateUserDto {
     example: 'myemail@gmail.com',
     description: 'Почта пользователя',
   })
-  @IsEmail()
+  @IsEmail({}, { message: 'Некорректный email' })
   readonly email: string;
 
   @ApiProperty({

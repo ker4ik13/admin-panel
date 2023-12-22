@@ -5,22 +5,19 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 // import { Response } from 'express';
-import {
-  ApiForbiddenResponse,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import UserDto from 'src/user/dto/user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { Roles } from 'src/auth/roles.auth.decorator';
 import { UserRoles } from 'src/types/UserRoles';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { AddRoleDto } from './dto/addRole.dto';
+import { BanUserDto } from './dto/banUser.dto';
 
 // TODO: разобраться с авторизацией
 @ApiTags('Пользователи')
@@ -43,7 +40,7 @@ export class UserController {
 
   // Получение пользователя по ID
   @ApiOperation({
-    summary: `Получение пользователя по ID. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+    summary: `Получение пользователя по ID`,
   })
   @ApiParam({
     name: 'id',
@@ -52,12 +49,6 @@ export class UserController {
     type: String,
   })
   @ApiResponse({ status: 200, type: UserDto })
-  @ApiForbiddenResponse({
-    status: 403,
-    description: 'Недостаточно прав',
-  })
-  @Roles(UserRoles.Admin, UserRoles.Creator)
-  @UseGuards(RolesGuard)
   @Get('users/:id')
   getUserById(@Param('id') id: string) {
     return this.userService.getUser(id);
@@ -91,9 +82,31 @@ export class UserController {
     return this.userService.updateUser(id, userDto);
   }
 
-  // TODO: доделать выдачу ролей
   // Выдать роль пользователю
-  @ApiOperation({ summary: 'Выдать роль пользователю' })
+  @ApiOperation({
+    summary: `Выдать роль пользователю. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+  })
+  @ApiParam({
+    name: 'role',
+    example: {
+      value: UserRoles.Editor,
+      userId: 'dsjhdusacnsacihjaus',
+    },
+    required: true,
+    type: Object,
+  })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator, UserRoles.Admin)
+  @ApiResponse({ status: 200 })
+  @Post('users/role')
+  addRole(@Body() dto: AddRoleDto) {
+    return this.userService.addRole(dto);
+  }
+
+  // Забанить пользователя
+  @ApiOperation({
+    summary: `Забанить пользователя. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+  })
   @ApiParam({
     name: 'id',
     example: 'k34jjnsdfusa8i#3ddr3',
@@ -101,9 +114,28 @@ export class UserController {
     type: String,
   })
   @Roles(UserRoles.Creator, UserRoles.Admin)
+  @UseGuards(RolesGuard)
   @ApiResponse({ status: 200 })
-  @Patch('users/:id')
-  addRole(@Param('id') id: string, @Body() userDto: UserDto) {
-    return this.userService.updateUser(id, userDto);
+  @Post('users/ban')
+  ban(@Body() dto: BanUserDto) {
+    return this.userService.ban(dto);
+  }
+
+  // Разбанить пользователя
+  @ApiOperation({
+    summary: `Разбанить пользователя. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+  })
+  @ApiParam({
+    name: 'id',
+    example: 'k34jjnsdfusa8i#3ddr3',
+    required: true,
+    type: String,
+  })
+  @Roles(UserRoles.Creator, UserRoles.Admin)
+  @UseGuards(RolesGuard)
+  @ApiResponse({ status: 200 })
+  @Post('users/unban/:id')
+  unban(@Param('id') id: string) {
+    return this.userService.unban(id);
   }
 }

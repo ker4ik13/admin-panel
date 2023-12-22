@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -46,11 +46,11 @@ export class User {
   photo: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [Types.ObjectId],
     ref: 'Role',
     required: true,
   })
-  roles: string[];
+  roles: Types.ObjectId[];
 
   @Prop()
   isActivated: boolean;
@@ -66,6 +66,12 @@ export class User {
     required: true,
   })
   createdAt: string;
+
+  @Prop()
+  isBanned: boolean;
+
+  @Prop()
+  banReason: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

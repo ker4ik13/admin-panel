@@ -1,0 +1,34 @@
+name: Develop Actions
+on:
+  pull_request:
+    branches: [develop]
+  push:
+    branches: [develop]
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Staring Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Переход в папку клиента
+        run: cd ./client
+      - name: Установка зависимостей для клиента
+        run: npm install
+      - name: Проверка ESLint
+        run: npm run lint
+      - name: Сборка проекта
+        run: npm run build
+      - name: Переход в папку клиента
+        run: cd ../server
+      - name: Установка зависимостей для сервера
+        run: npm install
+      - name: Проверка ESLint
+        run: npm run lint
+      - name: Сборка проекта
+        run: npm run build

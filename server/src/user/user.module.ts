@@ -3,11 +3,11 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
-import { TokenModule } from 'src/token/token.module';
 import { Role, RoleSchema } from 'src/roles/role.schema';
 import { UserRole, UserRoleSchema } from 'src/roles/user-role.schema';
 import { RoleModule } from 'src/roles/role.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
@@ -17,8 +17,8 @@ import { AuthModule } from 'src/auth/auth.module';
       { name: Role.name, schema: RoleSchema },
       { name: UserRole.name, schema: UserRoleSchema },
     ]),
-    TokenModule,
     RoleModule,
+    MailModule,
   ],
   controllers: [UserController],
   providers: [UserService],
