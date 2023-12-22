@@ -1,10 +1,14 @@
-name: Develop Actions
-# e2e tests
+name: Server Actions
+
 on:
   pull_request:
-    branches: [develop]
+    branches:
+      - develop
+      - main
   push:
-    branches: [develop]
+    branches:
+      - develop
+      - main
 jobs:
   init:
     runs-on: ubuntu-latest
@@ -17,15 +21,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Сброка клиентского проекта
+      - name: Сброка и проверка ESLint серверного проекта
         run: |
-          cd client
-          npm install
-          npm run lint
-          npm run build
-      - name: Сброка серверного проекта
-        run: |
-          cd client
+          cd server
           npm install
           npm run lint
           npm run build
