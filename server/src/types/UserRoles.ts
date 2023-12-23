@@ -4,3 +4,9 @@ export enum UserRoles {
   Editor = 'EDITOR',
   User = 'USER',
 }
+export enum UserRolesLabels {
+  Creator = 'Создатель',
+  Admin = 'Администратор',
+  Editor = 'Редактор',
+  User = 'Пользователь',
+}

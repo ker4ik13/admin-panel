@@ -34,6 +34,7 @@ export class AuthService {
         ],
       });
     }
+
     // Хеширование пароля и сохранение пользователя
     const hashPassword = await bcrypt.hash(userDto.password, 3);
 

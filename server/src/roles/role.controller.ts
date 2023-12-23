@@ -14,7 +14,18 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  @ApiOperation({ summary: 'Добавление новой роли' })
+  @ApiOperation({ summary: 'Получить все роли' })
+  @ApiResponse({ status: 200, type: [Role] })
+  @Roles(UserRoles.Creator, UserRoles.Admin)
+  @UseGuards(RolesGuard)
+  @Get('roles')
+  get() {
+    return this.roleService.getRoles();
+  }
+
+  @ApiOperation({
+    summary: `Добавление новой роли. Доступно с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+  })
   @ApiResponse({ status: 201, type: Role })
   @Roles(UserRoles.Creator, UserRoles.Admin)
   @UseGuards(RolesGuard)

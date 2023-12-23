@@ -28,7 +28,7 @@ export class UserController {
 
   // Получение всех пользователей
   @ApiOperation({
-    summary: `Получение всех пользователей. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+    summary: `Получить всех пользователей. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
   })
   @ApiResponse({ status: 200, type: [UserDto] })
   @Roles(UserRoles.Creator, UserRoles.Admin)
@@ -40,7 +40,7 @@ export class UserController {
 
   // Получение пользователя по ID
   @ApiOperation({
-    summary: `Получение пользователя по ID`,
+    summary: `Получить пользователя по ID`,
   })
   @ApiParam({
     name: 'id',
@@ -55,7 +55,7 @@ export class UserController {
   }
 
   // Удаление пользователя по ID
-  @ApiOperation({ summary: 'Удаление пользователя по ID' })
+  @ApiOperation({ summary: 'Удалить пользователя по ID' })
   @ApiParam({
     name: 'id',
     example: 'k34jjnsdfusa8i#3ddr3',
@@ -69,7 +69,7 @@ export class UserController {
   }
 
   // Изменение пользователя по ID
-  @ApiOperation({ summary: 'Изменение пользователя по ID' })
+  @ApiOperation({ summary: 'Изменить пользователя по ID' })
   @ApiParam({
     name: 'id',
     example: 'k34jjnsdfusa8i#3ddr3',
