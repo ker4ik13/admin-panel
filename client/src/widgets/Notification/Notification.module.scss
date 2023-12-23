@@ -28,36 +28,36 @@
 
   &.warning {
     background-color: rgba(var(--orange), 0.8);
-    color: #fff;
+    color: $white;
 
     & svg {
-      color: #fff;
+      color: $white;
     }
 
     .closeButton svg {
-      color: #fff;
+      color: $white;
     }
   }
 
   &.error {
     background-color: rgba(var(--red), 0.8);
-    color: #fff;
+    color: $white;
 
     & svg {
-      color: #fff;
+      color: $white;
     }
 
     .closeButton svg {
-      color: #fff;
+      color: $white;
     }
   }
 
   &.info {
     background-color: rgba(var(--accent), 0.8);
-    color: #fff;
+    color: $white;
 
     & svg {
-      color: #fff;
+      color: $white;
     }
 
     .closeButton svg {

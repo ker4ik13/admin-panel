@@ -45,7 +45,7 @@ const SettingsPage = () => {
   return (
     <div className={s.page}>
       <h2 className={s.title}>{translate.settings.title[language]}</h2>
-      <div className={s.settings}>
+      <div className={s.pageWrapper}>
         <div className={s.stringInput}>
           <label htmlFor="theme" className={s.inputLabel}>
             {translate.settings.darkTheme[language]}

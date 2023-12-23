@@ -3,7 +3,7 @@
 .page {
   padding: rem(20);
   background-color: rgb(var(--bg-color-light-main));
-  min-height: calc(100vh - rem(72));
+  min-height: 100vh;
   position: relative;
   transition: 0.3s ease-in-out;
 }
@@ -19,15 +19,13 @@
   color: rgb(var(--text-color-dark));
   position: -webkit-sticky;
   position: sticky;
-  top: rem(22);
+  top: rem(14);
   z-index: 11;
+  @include H2-text();
 }
 
 // Настройки
 
-.settings {
-  margin-top: rem(20);
-}
 .stringInput {
   display: flex;
   align-items: center;
@@ -45,11 +43,11 @@
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
   .checkboxWrapper input[type="checkbox"] {
     --active: #275efe;
-    --active-inner: #fff;
+    --active-inner: $white;
     --focus: 2px rgba(39, 94, 254, 0.3);
     --border: #bbc1e1;
     --border-hover: #275efe;
-    --background: #fff;
+    --background: $white;
     --disabled: #f6f8ff;
     --disabled-inner: #e1e6f9;
     -webkit-appearance: none;
@@ -245,4 +243,71 @@
   margin-bottom: rem(10);
   margin-left: rem(20);
   cursor: text;
+}
+
+// Общие стили для страницы
+.docsWrapper {
+  max-width: rem(700);
+}
+.pageWrapper {
+  margin-top: rem(20);
+  color: rgb(var(--text-color-dark));
+
+  & ul {
+    margin-top: rem(6);
+    & li {
+      cursor: text;
+    }
+  }
+
+  & hr {
+    margin-top: rem(20);
+  }
+
+  & ol {
+    margin-top: rem(6);
+    & li {
+      cursor: text;
+    }
+  }
+
+  & h3 {
+    margin-top: rem(10);
+    @include H3-text();
+    position: -webkit-sticky;
+    position: sticky;
+    top: rem(70);
+    z-index: 10;
+    background-color: rgb(var(--bg-color-light-main));
+    padding: rem(10) 0;
+  }
+
+  & h4 {
+    margin-top: rem(10);
+    @include H4-text();
+  }
+
+  & h5 {
+    margin-top: rem(10);
+    @include H5-text();
+  }
+
+  & h6 {
+    margin-top: rem(10);
+    @include H6-text();
+  }
+
+  & p {
+    margin-top: rem(6);
+    @include p-text();
+  }
+
+  & a {
+    color: inherit;
+    text-underline-offset: rem(4);
+
+    &:hover {
+      color: rgb(var(--accent));
+    }
+  }
 }

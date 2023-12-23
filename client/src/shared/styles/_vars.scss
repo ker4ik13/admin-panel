@@ -2,7 +2,45 @@
 
 // Colors
 $accent: rgb(58, 121, 222);
+$white: #ffffff;
 // Text
+
+@mixin H1-text() {
+  font-size: rem(34);
+  font-weight: 600;
+  cursor: text;
+}
+@mixin H2-text() {
+  font-size: rem(30);
+  font-weight: 600;
+  cursor: text;
+}
+@mixin H3-text() {
+  font-size: rem(26);
+  font-weight: 600;
+  cursor: text;
+}
+@mixin H4-text() {
+  font-size: rem(24);
+  font-weight: 600;
+  cursor: text;
+}
+@mixin H5-text() {
+  font-size: rem(20);
+  font-weight: 600;
+  cursor: text;
+}
+@mixin H6-text() {
+  font-size: rem(18);
+  font-weight: 600;
+  cursor: text;
+}
+
+@mixin p-text() {
+  font-size: rem(16);
+  font-weight: 400;
+  cursor: text;
+}
 
 @mixin inter() {
   font-family: "Inter", sans-serif;

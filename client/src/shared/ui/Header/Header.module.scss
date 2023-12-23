@@ -78,6 +78,8 @@
   cursor: pointer;
   background: transparent;
   transition: 0.1s;
+  aspect-ratio: 1/1;
+  padding: 0;
 
   &:hover {
     opacity: 0.8;
@@ -131,7 +133,7 @@
 
   &.active {
     background-color: $accent;
-    color: #fff;
+    color: $white;
   }
 
   &:focus {

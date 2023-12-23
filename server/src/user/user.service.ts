@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-  // UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
@@ -10,7 +9,7 @@ import { Model } from 'mongoose';
 import UserDto from 'src/user/dto/user.dto';
 import { RoleService } from 'src/roles/role.service';
 import CreateUserDto from './dto/createUser.dto';
-import { UserRoles } from 'src/types/UserRoles';
+import { UserRoles, UserRolesLabels } from 'src/types/UserRoles';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
 import { MailService } from 'src/mail/mail.service';
@@ -27,7 +26,7 @@ export class UserService {
   async createUser(userDto: CreateUserDto) {
     const role = await this.roleService.createRole({
       value: UserRoles.User,
-      label: 'Пользователь',
+      label: UserRolesLabels.User,
     });
 
     const newUser = {
@@ -53,34 +52,6 @@ export class UserService {
     const activatedUser = await user.save();
     return activatedUser;
   }
-
-  // Обновление токенов
-  // async refresh(refreshToken: string) {
-  //   if (!refreshToken) {
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   // Валидация токенов
-  //   const userData = this.tokenService.validateRefreshToken(refreshToken);
-  //   const tokenFromDb = await this.tokenService.findToken(refreshToken);
-
-  //   if (!userData || !tokenFromDb) {
-  //     throw new UnauthorizedException();
-  //   }
-
-  //   const user = await this.model.findById(tokenFromDb.user);
-  //   const userDto = new UserDto(user);
-  //   const tokens = await this.tokenService.generateTokens({ ...userDto });
-  //   await this.tokenService.saveToken(userDto._id, tokens.refreshToken);
-
-  //   const returnUser = {
-  //     accessToken: tokens.accessToken,
-  //     refreshToken: tokens.refreshToken,
-  //     user: userDto,
-  //   };
-
-  //   return returnUser;
-  // }
 
   async getAllUsers() {
     return await this.model.find().populate('roles').exec();

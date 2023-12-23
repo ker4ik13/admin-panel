@@ -47,6 +47,10 @@ export const translate: ITranslate = {
       ru: 'Кошелек',
       en: 'Wallet',
     },
+    tools: {
+      ru: 'Инструменты',
+      en: 'Tools',
+    },
   },
   header: {
     hello: {

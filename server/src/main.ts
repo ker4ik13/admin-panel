@@ -20,6 +20,7 @@ async function bootstrap() {
 
   await app.listen(PORT, () => {
     console.log(`Cервер запущен на порту ${PORT}.`);
+    console.log(`http://localhost:${PORT}`);
 
     if (+PORT === 3333) {
       console.log('Сервер запущен в режиме разработки.');
