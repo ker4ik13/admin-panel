@@ -4,16 +4,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './user.schema';
-import { Model } from 'mongoose';
-import UserDto from 'src/user/dto/user.dto';
+import * as bcrypt from 'bcryptjs';
+import { Model, Types } from 'mongoose';
+import { MailService } from 'src/mail/mail.service';
 import { RoleService } from 'src/roles/role.service';
-import CreateUserDto from './dto/createUser.dto';
 import { UserRoles, UserRolesLabels } from 'src/types/UserRoles';
+import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
-import { MailService } from 'src/mail/mail.service';
-import { IUser } from 'src/types/IUser';
+import RegisterUserDro from './dto/registerUser.dto';
+import { User, UserDocument } from './user.schema';
 
 @Injectable()
 export class UserService {
@@ -23,20 +23,25 @@ export class UserService {
     private readonly mailService: MailService,
   ) {}
 
-  async createUser(userDto: CreateUserDto) {
+  async registerUser(userDto: RegisterUserDro) {
     const role = await this.roleService.createRole({
       value: UserRoles.User,
       label: UserRolesLabels.User,
     });
 
+    // Хеширование пароля и сохранение пользователя
+    const hashPassword = await bcrypt.hash(userDto.password, 3);
+
     const newUser = {
       ...userDto,
+      password: hashPassword,
       roles: [role.id],
     };
 
     const addedUser = await this.model.create(newUser);
-    const returnUser: IUser = await addedUser.populate('roles');
+    const returnUser: UserDocument = await addedUser.populate('roles');
     this.mailService.newUser(returnUser);
+    // TODO: сделать отправку в телеграм
     return returnUser;
   }
 
@@ -57,20 +62,30 @@ export class UserService {
     return await this.model.find().populate('roles').exec();
   }
 
-  async getUser(id: string) {
+  async getUserById(id: string | Types.ObjectId) {
     return await this.model.findById(id).populate('roles').exec();
   }
 
-  async deleteUser(id: string) {
-    return await this.model.findByIdAndDelete(id);
+  async deleteUserById(id: string) {
+    return await this.model.findByIdAndDelete(id).populate('roles').exec();
   }
 
-  async updateUser(id: string, body: UserDto) {
-    return await this.model.findByIdAndUpdate(id, body, { new: true });
+  async updateUserById(id: string, body: UserDto) {
+    return await this.model
+      .findByIdAndUpdate(id, body, { new: true })
+      .populate('roles')
+      .exec();
   }
 
   async getUserByEmail(email: string) {
     return await this.model.findOne({ email: email }).populate('roles').exec();
+  }
+
+  async getUserByTelegramId(id: number) {
+    return await this.model
+      .findOne({ telegramId: id })
+      .populate('roles')
+      .exec();
   }
 
   async addRole(dto: AddRoleDto) {
@@ -91,7 +106,10 @@ export class UserService {
   // Бан пользователя
   async ban(dto: BanUserDto) {
     try {
-      const user = await this.model.findById(dto.userId);
+      const user = await this.model
+        .findById(dto.userId)
+        .populate('roles')
+        .exec();
 
       if (!user) {
         throw new NotFoundException({
@@ -113,7 +131,7 @@ export class UserService {
   // Разюан пользователя
   async unban(id: string) {
     try {
-      const user = await this.model.findById(id);
+      const user = await this.model.findById(id).populate('roles').exec();
 
       if (!user) {
         throw new NotFoundException({

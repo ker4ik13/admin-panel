@@ -1,13 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import type { IUser } from '../../types/IUser';
+import { Types } from 'mongoose';
 import { type IRole } from 'src/types/IRole';
+import type { IUser } from '../../types/IUser';
 
 export default class UserDto {
   @ApiProperty({
     example: 'dsaudysadsydsa6dt56dsad6atsd67as',
     description: 'Уникальный ID пользователя',
   })
-  _id: string;
+  _id: Types.ObjectId;
 
   @ApiProperty({
     example: 'myemail@gmail.com',
@@ -44,6 +45,18 @@ export default class UserDto {
     description: 'Дата создания аккаунта',
   })
   createdAt: string;
+
+  @ApiProperty({
+    example: '2023-12-20T15:09:55.204Z',
+    description: 'Дата последнего изменения аккаунта',
+  })
+  updatedAt?: string;
+
+  @ApiProperty({
+    example: '13762742',
+    description: 'ID Telegram аккаунта',
+  })
+  telegramId?: string;
 
   @ApiProperty({
     example: [

@@ -18,10 +18,9 @@ aside[data-tag="aside"].close {
   }
   & .logoWrapper {
     transform: translate(-150%, 0);
+    white-space: nowrap;
   }
-  & .pages {
-    margin-left: rem(8);
-    margin-right: rem(8);
+  & .menu {
     margin-top: rem(6);
   }
   & .pageLink {
@@ -46,6 +45,17 @@ aside[data-tag="aside"].close {
   & .new {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+.menu {
+  background-color: rgb(var(--bg-color-light));
+  color: rgb(var(--text-color-dark));
+  transition: color 0.2s, background 0.2s, background-color 0.2s;
+
+  & li div {
+    transition: 0.2s;
+    color: rgba(var(--text-color-dark), 0.5) !important;
   }
 }
 
@@ -79,6 +89,9 @@ aside[data-tag="aside"].close {
   cursor: pointer;
   border-radius: rem(8);
   transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @media (hover: hover) {
     &:hover {
@@ -104,6 +117,8 @@ aside[data-tag="aside"].close {
   margin-top: rem(10);
   top: 0;
   z-index: 2;
+  color: inherit;
+  text-decoration: none;
 }
 .pagesTitle {
   color: rgb(var(--text-color-dark));

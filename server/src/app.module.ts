@@ -1,17 +1,18 @@
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ResponseModule } from './response/response.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from './user/user.module';
-import { RoleModule } from './roles/role.module';
 import { AuthModule } from './auth/auth.module';
+import { BotModule } from './bot/bot.module';
 import { MailModule } from './mail/mail.module';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { RoleModule } from './roles/role.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+      isGlobal: true,
     }),
     MailerModule.forRoot({
       transport: {
@@ -28,10 +29,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     MongooseModule.forRoot(process.env.DB_URL),
     UserModule,
-    ResponseModule,
     RoleModule,
     MailModule,
     AuthModule,
+    BotModule,
   ],
   controllers: [],
   providers: [],

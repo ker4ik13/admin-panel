@@ -1,119 +1,139 @@
 "use client";
 
-import Link from "next/link";
+import { language, translate } from "@/data/translate";
+import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
 import s from "./Sidebar.module.scss";
-import { usePathname } from "next/navigation";
-import { language, translate } from "@/data/translate";
 
 // Icons
-import { LuLayoutDashboard } from "react-icons/lu";
-import { BiSolidDashboard } from "react-icons/bi";
+import { useRef, useState } from "react";
+import { FaRegUser } from "react-icons/fa6";
+import { IoIosHelpCircleOutline } from "react-icons/io";
 import {
-  MdOutlineFeedback,
-  MdOutlineWorkOutline,
-  MdFeedback,
-  MdWork,
-  MdArticle,
-  MdOutlineArticle,
-} from "react-icons/md";
-import {
-  IoDocument,
-  IoMailOpenOutline,
-  IoMailOutline,
   IoDocumentOutline,
-  IoWallet,
+  IoMailOutline,
   IoWalletOutline,
 } from "react-icons/io5";
-import { FaUser, FaRegUser } from "react-icons/fa6";
+import { LuLayoutDashboard } from "react-icons/lu";
 import {
-  IoIosHelpCircle,
-  IoIosHelpCircleOutline,
-  IoIosArrowBack,
-  IoIosArrowForward,
-} from "react-icons/io";
-import { PiToolbox, PiToolboxFill } from "react-icons/pi";
-import { useRef } from "react";
+  MdOutlineArticle,
+  MdOutlineFeedback,
+  MdOutlineWorkOutline,
+} from "react-icons/md";
+import { PiToolbox } from "react-icons/pi";
 
-interface IPage {
-  name: string;
-  href: string;
-  activeIcon: JSX.Element;
-  unactiveIcon: JSX.Element;
+// Ant design
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Button, Menu, type MenuProps } from "antd";
+import Link from "next/link";
+
+type MenuItem = Required<MenuProps>["items"][number];
+
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: "group"
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  } as MenuItem;
 }
 
-const mainPages: IPage[] = [
-  {
-    name: translate.sidebar.dashboard[language],
-    href: "/",
-    activeIcon: <BiSolidDashboard />,
-    unactiveIcon: <LuLayoutDashboard />,
-  },
-  {
-    name: translate.sidebar.orders[language],
-    href: "/orders",
-    activeIcon: <MdWork />,
-    unactiveIcon: <MdOutlineWorkOutline />,
-  },
-  {
-    name: translate.sidebar.users[language],
-    href: "/users",
-    activeIcon: <FaUser />,
-    unactiveIcon: <FaRegUser />,
-  },
-  {
-    name: translate.sidebar.articles[language],
-    href: "/articles",
-    activeIcon: <MdArticle />,
-    unactiveIcon: <MdOutlineArticle />,
-  },
-  {
-    name: translate.sidebar.wallet[language],
-    href: "/wallet",
-    activeIcon: <IoWallet />,
-    unactiveIcon: <IoWalletOutline />,
-  },
-];
-
-const communicationPages: IPage[] = [
-  {
-    name: translate.sidebar.responses[language],
-    href: "/responses",
-    activeIcon: <MdFeedback />,
-    unactiveIcon: <MdOutlineFeedback />,
-  },
-  {
-    name: translate.sidebar.mailings[language],
-    href: "/mailings",
-    activeIcon: <IoMailOpenOutline />,
-    unactiveIcon: <IoMailOutline />,
-  },
-];
-
-const helpPages: IPage[] = [
-  {
-    name: translate.sidebar.help[language],
-    href: "/help",
-    activeIcon: <IoIosHelpCircle />,
-    unactiveIcon: <IoIosHelpCircleOutline />,
-  },
-  {
-    name: translate.sidebar.documentation[language],
-    href: "/documentation",
-    activeIcon: <IoDocument />,
-    unactiveIcon: <IoDocumentOutline />,
-  },
-  {
-    name: translate.sidebar.tools[language],
-    href: "/tools",
-    activeIcon: <PiToolboxFill />,
-    unactiveIcon: <PiToolbox />,
-  },
+const items: MenuItem[] = [
+  getItem(
+    "Главное",
+    "main-pages",
+    null,
+    [
+      getItem(
+        <Link href="/">{translate.sidebar.dashboard[language]}</Link>,
+        "/",
+        <LuLayoutDashboard />
+      ),
+      getItem(
+        <Link href="/orders">{translate.sidebar.orders[language]}</Link>,
+        "/orders",
+        <MdOutlineWorkOutline />
+      ),
+      getItem(
+        <Link href="/users">{translate.sidebar.users[language]}</Link>,
+        "/users",
+        <FaRegUser />
+      ),
+      getItem(
+        <Link href="/articles">{translate.sidebar.articles[language]}</Link>,
+        "/articles",
+        <MdOutlineArticle />
+      ),
+      getItem(
+        <Link href="/wallet">{translate.sidebar.wallet[language]}</Link>,
+        "/wallet",
+        <IoWalletOutline />
+      ),
+    ],
+    "group"
+  ),
+  { type: "divider" },
+  getItem(
+    "Коммуникация",
+    "communication-pages",
+    null,
+    [
+      getItem(
+        <Link href="/responses">{translate.sidebar.responses[language]}</Link>,
+        "/responses",
+        <MdOutlineFeedback />
+      ),
+      getItem(
+        <Link href="/mailings">{translate.sidebar.mailings[language]}</Link>,
+        "/mailings",
+        <IoMailOutline />
+      ),
+    ],
+    "group"
+  ),
+  getItem(
+    "Помощь",
+    "help-pages",
+    null,
+    [
+      getItem(
+        <Link href="/help">{translate.sidebar.help[language]}</Link>,
+        "/help",
+        <IoIosHelpCircleOutline />
+      ),
+      getItem(
+        <Link href="/documentation">
+          {translate.sidebar.documentation[language]}
+        </Link>,
+        "/documentation",
+        <IoDocumentOutline />
+      ),
+      getItem(
+        <Link href="/tools">{translate.sidebar.tools[language]}</Link>,
+        "/tools",
+        <PiToolbox />
+      ),
+    ],
+    "group"
+  ),
 ];
 
 export const Sidebar = () => {
   const pathName = usePathname();
   const sidebar = useRef<HTMLDivElement | null>(null);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+    handleOpenSidebar();
+  };
 
   const isActivePage = (link: string) => {
     return pathName === link ? `${s.pageLink} ${s.active}` : s.pageLink;
@@ -134,67 +154,22 @@ export const Sidebar = () => {
 
   return (
     <aside className={s.sidebar} ref={sidebar} data-tag="aside">
-      <button
-        type="button"
-        className={s.openButton}
-        onClick={handleOpenSidebar}
-      >
-        {sidebar.current?.className.includes(s.close) ? (
-          <IoIosArrowForward />
-        ) : (
-          <IoIosArrowBack />
-        )}
-      </button>
-      <div className={s.logoWrapper}>
+      <Button type="primary" onClick={toggleCollapsed} className={s.openButton}>
+        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+      </Button>
+
+      <Link href="/" className={s.logoWrapper}>
         <Logo />
-      </div>
+      </Link>
 
-      {/* Главные страницы */}
-      <p className={s.pagesTitle}>Главное</p>
-      <div className={s.pages}>
-        {mainPages.map((page) => (
-          <Link
-            href={page.href}
-            key={page.href}
-            className={isActivePage(page.href)}
-          >
-            {isActiveIcon(page.href) ? page.activeIcon : page.unactiveIcon}
-            <span>{page.name}</span>
-
-            {/* <div className={s.new}>+99</div> */}
-          </Link>
-        ))}
-      </div>
-
-      {/* Страницы коммуникации */}
-      <p className={s.pagesTitle}>Коммуникация</p>
-      <div className={s.pages}>
-        {communicationPages.map((page) => (
-          <Link
-            href={page.href}
-            key={page.href}
-            className={isActivePage(page.href)}
-          >
-            {isActiveIcon(page.href) ? page.activeIcon : page.unactiveIcon}
-            <span>{page.name}</span>
-          </Link>
-        ))}
-      </div>
-
-      {/* Страницы помощи */}
-      <p className={s.pagesTitle}>Помощь</p>
-      <div className={s.pages}>
-        {helpPages.map((page) => (
-          <Link
-            href={page.href}
-            key={page.href}
-            className={isActivePage(page.href)}
-          >
-            {isActiveIcon(page.href) ? page.activeIcon : page.unactiveIcon}
-            <span>{page.name}</span>
-          </Link>
-        ))}
-      </div>
+      <Menu
+        defaultSelectedKeys={[pathName || "/"]}
+        defaultOpenKeys={["sub1"]}
+        mode="inline"
+        inlineCollapsed={collapsed}
+        items={items}
+        className={s.menu}
+      />
     </aside>
   );
 };

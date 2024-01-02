@@ -11,11 +11,11 @@ import {
 import { UserService } from './user.service';
 // import { Response } from 'express';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import UserDto from 'src/user/dto/user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { Roles } from 'src/auth/roles.auth.decorator';
-import { UserRoles } from 'src/types/UserRoles';
 import { RolesGuard } from 'src/auth/roles.guard';
+import { UserRoles } from 'src/types/UserRoles';
+import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
 
@@ -51,7 +51,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserDto })
   @Get('users/:id')
   getUserById(@Param('id') id: string) {
-    return this.userService.getUser(id);
+    return this.userService.getUserById(id);
   }
 
   // Удаление пользователя по ID
@@ -65,7 +65,7 @@ export class UserController {
   @ApiResponse({ status: 200, type: UserDto })
   @Delete('users/:id')
   deleteUserById(@Param('id') id: string) {
-    return this.userService.deleteUser(id);
+    return this.userService.deleteUserById(id);
   }
 
   // Изменение пользователя по ID
@@ -79,7 +79,7 @@ export class UserController {
   @ApiResponse({ status: 204, type: UserDto })
   @Patch('users/:id')
   updateUserById(@Param('id') id: string, @Body() userDto: UserDto) {
-    return this.userService.updateUser(id, userDto);
+    return this.userService.updateUserById(id, userDto);
   }
 
   // Выдать роль пользователю

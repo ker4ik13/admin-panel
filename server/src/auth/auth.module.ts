@@ -1,20 +1,20 @@
+import { MailModule } from '@mail/mail.module';
 import { Module, forwardRef } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { UserModule } from '@user/user.module';
+import { TokenModule } from 'src/token/token.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserModule } from 'src/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
-import { MailModule } from 'src/mail/mail.module';
+import { options } from './config';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    JwtModule.register({
-      secret: process.env.SECRET_KEY || 'secret-key',
-      signOptions: {
-        expiresIn: process.env.NODE_ENV === 'development' ? '24h' : '30m',
-      },
-    }),
+    PassportModule,
+    JwtModule.registerAsync(options()),
     MailModule,
+    TokenModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

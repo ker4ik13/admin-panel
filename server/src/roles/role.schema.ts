@@ -4,7 +4,9 @@ import { HydratedDocument } from 'mongoose';
 
 export type RoleDocument = HydratedDocument<Role>;
 
-@Schema()
+@Schema({
+  collection: 'roles',
+})
 export class Role {
   @ApiProperty({
     example: 'ADMIN',

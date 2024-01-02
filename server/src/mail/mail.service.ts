@@ -1,16 +1,13 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { Transporter } from 'nodemailer';
 import { MailerService } from '@nestjs-modules/mailer';
-import { IUser } from 'src/types/IUser';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { UserDocument } from '@user/user.schema';
 import { NewsletterDto } from './dto/newsletter.dto';
 
 @Injectable()
 export class MailService {
-  transporter: Transporter;
-
   constructor(private readonly mailerService: MailerService) {}
 
-  async newUser(user: IUser) {
+  async newUser(user: UserDocument) {
     const result = await this.mailerService.sendMail({
       from: `${process.env.SMTP_USER}@yandex.ru`,
       to: `ker4ik13@yandex.ru`,
@@ -20,9 +17,7 @@ export class MailService {
             <h1>Новый пользователь!</h1>
             <p><b>Имя</b>: ${user.name} ${user.lastName}</p>
             <p><b>Почта</b>: <a href=${'mailto:' + user.email}>${user.email}</a>
-            <p><b>Роли</b>: ${user.roles
-              .map((role) => role.label)
-              .join(', ')}</p>
+            <p><b>Роли</b>: ${user.roles.map((role) => role).join(', ')}</p>
             <p><b>Дата регистрации</b>: ${new Date(
               user.createdAt,
             ).toLocaleString('ru')}</p>

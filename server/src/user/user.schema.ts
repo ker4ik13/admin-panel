@@ -4,7 +4,9 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({
+  collection: 'users',
+})
 export class User {
   @ApiProperty({
     example: 'myemail@gmail.com',
@@ -12,6 +14,7 @@ export class User {
   })
   @Prop({
     required: true,
+    unique: true,
   })
   email: string;
 
@@ -58,14 +61,21 @@ export class User {
   @Prop()
   activationLink: string;
 
+  @Prop()
+  telegramId: number;
+
   @ApiProperty({
     example: 'Дата ISO string',
     description: 'Дата создания аккаунта',
   })
   @Prop({
     required: true,
+    default: new Date().toISOString(),
   })
   createdAt: string;
+
+  @Prop()
+  updatedAt: string;
 
   @Prop()
   isBanned: boolean;
