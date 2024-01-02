@@ -1,4 +1,4 @@
-import { JwtAuthGuard } from '@auth/jwt.auth.guard';
+import { JwtAuthGuard } from '@auth/guards';
 import { Controller, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 

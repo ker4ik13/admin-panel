@@ -1,3 +1,5 @@
+import { Roles } from '@auth/decorators';
+import { RolesGuard } from '@auth/guards';
 import {
   Body,
   Controller,
@@ -8,20 +10,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-// import { Response } from 'express';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
-import { Roles } from 'src/auth/roles.auth.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
 import { UserRoles } from 'src/types/UserRoles';
 import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
+import { UserService } from './user.service';
 
-// TODO: разобраться с авторизацией
 @ApiTags('Пользователи')
-@UseGuards(JwtAuthGuard)
 @Controller('api')
 export class UserController {
   constructor(private readonly userService: UserService) {}

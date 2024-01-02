@@ -1,5 +1,7 @@
+import { JwtAuthGuard } from '@auth/guards';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { BotModule } from './bot/bot.module';
@@ -19,6 +21,7 @@ import { UserModule } from './user/user.module';
       }),
       inject: [ConfigService],
     }),
+
     UserModule,
     RoleModule,
     MailModule,
@@ -26,6 +29,11 @@ import { UserModule } from './user/user.module';
     BotModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -22,7 +22,7 @@ export class TokenService {
     if (token) {
       return await this.model.findOneAndUpdate(
         {
-          token: token,
+          token,
         },
         {
           token: v4(),
@@ -30,6 +30,7 @@ export class TokenService {
         },
         {
           upsert: true,
+          new: true,
         },
       );
     }

@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -15,6 +16,8 @@ import { Tokens } from 'src/types/ITokens';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -37,7 +40,12 @@ export class AuthService {
   // Регистрация
   async register(userDto: RegisterUserDro, agent: string) {
     // Проверка, есть ли пользователь с таким email в Базе Данных
-    const candidate = await this.userService.getUserByEmail(userDto.email);
+    const candidate = await this.userService
+      .getUserByEmail(userDto.email)
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
 
     if (candidate) {
       throw new ConflictException({
@@ -47,10 +55,15 @@ export class AuthService {
       });
     }
 
-    const user: UserDocument = await this.userService.registerUser({
-      ...userDto,
-      createdAt: new Date().toISOString(),
-    });
+    const user: UserDocument = await this.userService
+      .registerUser({
+        ...userDto,
+        createdAt: new Date().toISOString(),
+      })
+      .catch((err) => {
+        this.logger.error(err);
+        return null;
+      });
 
     return await this.generateTokens(user, agent);
   }

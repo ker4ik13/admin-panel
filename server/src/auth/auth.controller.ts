@@ -22,11 +22,11 @@ import UserDto from '@user/dto/user.dto';
 import { Response } from 'express';
 import { Tokens } from 'src/types/ITokens';
 import { AuthService } from './auth.service';
-import { Cookie } from './decorators/cookies.decorator';
-import { UserAgent } from './decorators/user-agent.decorator';
+import { Cookie, Public, UserAgent } from './decorators';
 
 const REFRESH_TOKEN = 'refreshToken';
 
+@Public()
 @ApiTags('Авторизация')
 @Controller('api/auth')
 export class AuthController {
@@ -53,6 +53,7 @@ export class AuthController {
         message: ['Ошибка при входе'],
       });
     }
+    console.log(tokens);
     this.setRefreshTokenInCookies(tokens, res);
   }
 

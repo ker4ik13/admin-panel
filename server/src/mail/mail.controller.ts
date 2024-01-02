@@ -1,10 +1,9 @@
+import { Roles } from '@auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '@auth/guards';
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { UserRoles } from 'src/types/UserRoles';
 import { NewsletterDto } from './dto/newsletter.dto';
 import { MailService } from './mail.service';
-import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.auth.decorator';
-import { UserRoles } from 'src/types/UserRoles';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api')
