@@ -10,7 +10,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { LoginUserDto } from '@user/dto/loginUser.dto';
 import RegisterUserDro from '@user/dto/registerUser.dto';
 import UserDto from '@user/dto/user.dto';
@@ -67,6 +72,9 @@ export class AuthController {
     return user;
   }
 
+  @ApiOperation({ summary: 'Обновление токенов' })
+  @ApiResponse({ status: 201 })
+  @ApiCookieAuth('refreshToken')
   @Post('refresh')
   async refresh(
     @Cookie(REFRESH_TOKEN) refreshToken: string,

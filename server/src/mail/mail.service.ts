@@ -1,15 +1,19 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UserDocument } from '@user/user.schema';
 import { NewsletterDto } from './dto/newsletter.dto';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async newUser(user: UserDocument) {
     const result = await this.mailerService.sendMail({
-      from: `${process.env.SMTP_USER}@yandex.ru`,
+      from: `${this.configService.get('SMTP_USER')}@yandex.ru`,
       to: `ker4ik13@yandex.ru`,
       subject: 'Новый пользователь в админ панели на сайте KireevDev',
       html: `
@@ -33,7 +37,7 @@ export class MailService {
     try {
       dto.emails.map(async (email) => {
         await this.mailerService.sendMail({
-          from: `${process.env.SMTP_USER}@yandex.ru`,
+          from: `${this.configService.get('SMTP_USER')}@yandex.ru`,
           to: email,
           subject: dto.title,
           html: dto.message,
@@ -59,14 +63,14 @@ export class MailService {
     },
   ) {
     console.log('Отправка сообщения на электронную почту');
-    console.log('user: ' + process.env.SMTP_USER);
-    console.log('host: ' + process.env.SMTP_HOST);
-    console.log('port: ' + process.env.SMTP_PORT);
+    console.log('user: ' + this.configService.get('SMTP_USER'));
+    console.log('host: ' + this.configService.get('SMTP_HOST'));
+    console.log('port: ' + this.configService.get('SMTP_PORT'));
     console.log('пароль тоже есть');
 
     const result = await this.mailerService.sendMail({
-      from: `${process.env.SMTP_USER}@yandex.ru`,
-      to: `${process.env.SMTP_USER}@yandex.ru`,
+      from: `${this.configService.get('SMTP_USER')}@yandex.ru`,
+      to: `${this.configService.get('SMTP_USER')}@yandex.ru`,
       subject: 'Новая заявка с сайта "Твоя Кухня"',
       html: `
           <div>
