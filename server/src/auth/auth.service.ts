@@ -140,4 +140,9 @@ export class AuthService {
 
     return this.generateTokens(user, agent);
   }
+
+  // Удаление токена / выход пользователя
+  async deleteRefreshToken(token: string) {
+    return await this.tokenService.deleteToken(token);
+  }
 }

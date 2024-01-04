@@ -5,6 +5,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -29,7 +30,7 @@ export class UserController {
   @ApiOperation({
     summary: `Получить всех пользователей. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
   })
-  @ApiResponse({ status: 200, type: [UserDto] })
+  @ApiResponse({ status: HttpStatus.OK, type: [UserDto] })
   @Get('users')
   async getAllUsers() {
     return await this.userService.getAllUsers();
@@ -45,7 +46,7 @@ export class UserController {
     required: true,
     type: String,
   })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Get('users/:id')
   getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);
@@ -59,7 +60,7 @@ export class UserController {
     required: true,
     type: String,
   })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Delete('users/:id')
   deleteUserById(@Param('id') id: string, @CurrentUser() user: IJwtPayload) {
     return this.userService.deleteUserById(id, user);
@@ -73,7 +74,7 @@ export class UserController {
     required: true,
     type: String,
   })
-  @ApiResponse({ status: 204, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Patch('users/:id')
   updateUserById(@Param('id') id: string, @Body() userDto: UserDto) {
     return this.userService.updateUserById(id, userDto);
@@ -92,7 +93,7 @@ export class UserController {
     required: true,
     type: Object,
   })
-  @ApiResponse({ status: 200, type: UserDto })
+  @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Post('users/role')
   addRole(@Body() dto: AddRoleDto) {
     return this.userService.addRole(dto);
@@ -108,7 +109,7 @@ export class UserController {
     required: true,
     type: String,
   })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: HttpStatus.OK })
   @Post('users/ban')
   ban(@Body() dto: BanUserDto, @CurrentUser('roles') roles: IRole[]) {
     return this.userService.ban(dto, roles);
@@ -126,7 +127,7 @@ export class UserController {
   })
   @Roles(UserRoles.Creator, UserRoles.Admin)
   @UseGuards(RolesGuard)
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: HttpStatus.OK })
   @Post('users/unban/:id')
   unban(@Param('id') id: string, @CurrentUser('roles') roles: IRole[]) {
     return this.userService.unban(id, roles);

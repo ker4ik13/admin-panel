@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
   Res,
@@ -38,7 +39,7 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
   @ApiResponse({
-    status: 201,
+    status: HttpStatus.CREATED,
     type: LoginUserDto,
   })
   @Post('login')
@@ -58,7 +59,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Регистрация пользователя' })
-  @ApiResponse({ status: 201, type: UserDto })
+  @ApiResponse({ status: HttpStatus.CREATED, type: UserDto })
   @UsePipes(ValidationPipe)
   @Post('register')
   async register(@Body() userDto: RegisterUserDro) {
@@ -74,7 +75,7 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Обновление токенов' })
-  @ApiResponse({ status: 201 })
+  @ApiResponse({ status: HttpStatus.CREATED })
   @ApiCookieAuth('refreshToken')
   @Post('refresh')
   async refresh(
@@ -97,6 +98,29 @@ export class AuthController {
     }
 
     this.setRefreshTokenInCookies(tokens, res);
+  }
+
+  @ApiOperation({ summary: 'Выход пользователя' })
+  @ApiResponse({ status: HttpStatus.OK })
+  @ApiCookieAuth('refreshToken')
+  @Get('logout')
+  async logout(
+    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Res() res: Response,
+  ) {
+    if (!refreshToken) {
+      res.sendStatus(HttpStatus.OK);
+      return;
+    }
+
+    await this.authService.deleteRefreshToken(refreshToken);
+    res.cookie(REFRESH_TOKEN, '', {
+      httpOnly: true,
+      secure: true,
+      expires: new Date(),
+    });
+
+    res.sendStatus(HttpStatus.OK);
   }
 
   private setRefreshTokenInCookies(tokens: Tokens, res: Response) {
