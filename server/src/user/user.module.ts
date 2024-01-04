@@ -1,3 +1,4 @@
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from 'src/auth/auth.module';
@@ -12,6 +13,7 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [
+    CacheModule.register(),
     forwardRef(() => AuthModule),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },

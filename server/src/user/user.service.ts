@@ -1,13 +1,18 @@
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
-import { Model, Types } from 'mongoose';
+import { Cache } from 'cache-manager';
+import { Model } from 'mongoose';
 import { isRoleIncludes } from 'src/libs/helpers';
+import { convertToSeconds } from 'src/libs/utils';
 import { MailService } from 'src/mail/mail.service';
 import { RoleService } from 'src/roles/role.service';
 import { TokenService } from 'src/token/token.service';
@@ -27,6 +32,8 @@ export class UserService {
     private readonly roleService: RoleService,
     private readonly mailService: MailService,
     private readonly tokenService: TokenService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly configService: ConfigService,
   ) {}
 
   async registerUser(userDto: RegisterUserDro) {
@@ -74,9 +81,40 @@ export class UserService {
     return allUsers;
   }
 
-  async getUserById(id: string | Types.ObjectId): Promise<UserResponse> {
+  async getUserById(id: string, isReset = false): Promise<UserResponse> {
+    if (isReset) {
+      await this.cacheManager.del(id);
+    }
+
+    const user = await this.cacheManager.get<UserResponse>(id);
+
+    if (!user) {
+      const foundUser = new UserResponse(
+        await this.model.findById(id).populate('roles').exec(),
+      );
+
+      if (!foundUser) {
+        return null;
+      }
+
+      await this.cacheManager.set(
+        id,
+        foundUser,
+        convertToSeconds(this.configService.get('JWT_EXPIRES')),
+      );
+      return foundUser;
+    }
+
+    return user;
+  }
+
+  async getUserByEmail(email: string) {
+    return await this.model.findOne({ email }).populate('roles').exec();
+  }
+
+  async getUserByTelegramId(id: number): Promise<UserResponse> {
     return new UserResponse(
-      await this.model.findById(id).populate('roles').exec(),
+      await this.model.findOne({ telegramId: id }).populate('roles').exec(),
     );
   }
 
@@ -89,6 +127,8 @@ export class UserService {
 
     // Удаление токенов пользователя
     await this.tokenService.deleteAllTokensByUserId(id);
+    // Удаление пользователя из кеша
+    await this.cacheManager.del(id);
 
     return new UserResponse(
       await this.model
@@ -126,16 +166,6 @@ export class UserService {
         .findOneAndUpdate({ email }, body, { new: true })
         .populate('roles')
         .exec(),
-    );
-  }
-
-  async getUserByEmail(email: string) {
-    return await this.model.findOne({ email }).populate('roles').exec();
-  }
-
-  async getUserByTelegramId(id: number): Promise<UserResponse> {
-    return new UserResponse(
-      await this.model.findOne({ telegramId: id }).populate('roles').exec(),
     );
   }
 
