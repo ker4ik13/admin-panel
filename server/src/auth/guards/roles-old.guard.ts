@@ -38,7 +38,6 @@ export class RolesGuard implements CanActivate {
       const token = authHeader.split(' ')[1];
 
       if (bearer !== 'Bearer' || !token) {
-        console.log('no token or bearer roles guard');
         throw new ForbiddenException({
           message: ['Недостаточно прав'],
         });
@@ -49,7 +48,6 @@ export class RolesGuard implements CanActivate {
       request.user = user;
       return user.roles.some((role) => requiredRoles.includes(role.value));
     } catch (error) {
-      console.log('catch roles guard');
       throw new ForbiddenException({
         message: ['Недостаточно прав'],
       });

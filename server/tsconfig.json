@@ -24,7 +24,9 @@
       "@auth": ["src/auth"],
       "@auth/*": ["src/auth/*"],
       "@mail": ["src/mail"],
-      "@mail/*": ["src/mail/*"]
+      "@mail/*": ["src/mail/*"],
+      "@common": ["src/libs/common"],
+      "@common/*": ["src/libs/common/*"]
     }
   }
 }

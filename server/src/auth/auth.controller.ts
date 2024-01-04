@@ -26,7 +26,7 @@ import { Tokens } from 'src/types/ITokens';
 import { AuthService } from './auth.service';
 import { Cookie, Public, UserAgent } from './decorators';
 
-const REFRESH_TOKEN = 'refreshToken';
+const REFRESH_TOKEN = 'refresh_token';
 
 @Public()
 @ApiTags('Авторизация')
@@ -76,20 +76,20 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Обновление токенов' })
   @ApiResponse({ status: HttpStatus.CREATED })
-  @ApiCookieAuth('refreshToken')
+  @ApiCookieAuth('refresh_token')
   @Post('refresh')
   async refresh(
-    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Cookie(REFRESH_TOKEN) refresh_token: string,
     @Res() res: Response,
     @UserAgent() agent: string,
   ) {
-    if (!refreshToken) {
+    if (!refresh_token) {
       throw new UnauthorizedException({
         message: ['Вы не авторизованы'],
       });
     }
 
-    const tokens = await this.authService.refreshTokens(refreshToken, agent);
+    const tokens = await this.authService.refreshTokens(refresh_token, agent);
 
     if (!tokens) {
       throw new UnauthorizedException({
@@ -102,18 +102,18 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Выход пользователя' })
   @ApiResponse({ status: HttpStatus.OK })
-  @ApiCookieAuth('refreshToken')
+  @ApiCookieAuth('refresh_token')
   @Get('logout')
   async logout(
-    @Cookie(REFRESH_TOKEN) refreshToken: string,
+    @Cookie(REFRESH_TOKEN) refresh_token: string,
     @Res() res: Response,
   ) {
-    if (!refreshToken) {
+    if (!refresh_token) {
       res.sendStatus(HttpStatus.OK);
       return;
     }
 
-    await this.authService.deleteRefreshToken(refreshToken);
+    await this.authService.deleteRefreshToken(refresh_token);
     res.cookie(REFRESH_TOKEN, '', {
       httpOnly: true,
       secure: true,
@@ -130,15 +130,15 @@ export class AuthController {
       });
     }
 
-    res.cookie(REFRESH_TOKEN, tokens.refreshToken.token, {
+    res.cookie(REFRESH_TOKEN, tokens.refresh_token.token, {
       httpOnly: true,
       sameSite: 'lax',
-      expires: new Date(tokens.refreshToken.exp),
+      expires: new Date(tokens.refresh_token.exp),
       secure:
         this.configService.get('NODE_ENV', 'development') === 'production',
       path: '/',
     });
 
-    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+    res.status(HttpStatus.CREATED).json({ access_token: tokens.access_token });
   }
 }

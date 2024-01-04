@@ -79,12 +79,12 @@ export class AuthService {
       roles: user.roles,
     };
 
-    const accessToken = `Bearer ${this.jwtService.sign(payload)}`;
-    const refreshToken = await this.getRefreshToken(user._id, agent);
+    const access_token = `Bearer ${this.jwtService.sign(payload)}`;
+    const refresh_token = await this.getRefreshToken(user._id, agent);
 
     return {
-      accessToken,
-      refreshToken,
+      access_token,
+      refresh_token,
     };
   }
 
@@ -118,8 +118,8 @@ export class AuthService {
   }
 
   // Обновление токенов
-  async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
-    const token = await this.tokenService.findToken(refreshToken);
+  async refreshTokens(refresh_token: string, agent: string): Promise<Tokens> {
+    const token = await this.tokenService.findToken(refresh_token);
 
     if (!token) {
       throw new UnauthorizedException({
@@ -127,7 +127,7 @@ export class AuthService {
       });
     }
 
-    await this.tokenService.deleteToken(refreshToken);
+    await this.tokenService.deleteToken(refresh_token);
 
     // Если истекла дата токена
     if (new Date(token.exp) < new Date()) {

@@ -121,7 +121,7 @@ export class UserService {
   }
 
   async getUserByEmail(email: string) {
-    return await this.model.findOne({ email: email }).populate('roles').exec();
+    return await this.model.findOne({ email }).populate('roles').exec();
   }
 
   async getUserByTelegramId(id: number): Promise<UserResponse> {

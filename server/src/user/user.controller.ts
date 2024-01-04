@@ -1,5 +1,4 @@
-import { CurrentUser, Roles } from '@auth/decorators';
-import { RolesGuard } from '@auth/guards';
+import { CurrentUser } from '@auth/decorators';
 import {
   Body,
   Controller,
@@ -9,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IJwtPayload } from 'src/types/IJwtPayload';
@@ -125,11 +123,19 @@ export class UserController {
     required: true,
     type: String,
   })
-  @Roles(UserRoles.Creator, UserRoles.Admin)
-  @UseGuards(RolesGuard)
   @ApiResponse({ status: HttpStatus.OK })
   @Post('users/unban/:id')
   unban(@Param('id') id: string, @CurrentUser('roles') roles: IRole[]) {
     return this.userService.unban(id, roles);
+  }
+
+  // Получить себя
+  @ApiOperation({
+    summary: 'Получить себя',
+  })
+  @ApiResponse({ status: HttpStatus.OK })
+  @Get('me')
+  getMe(@CurrentUser() user: IJwtPayload) {
+    return user;
   }
 }

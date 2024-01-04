@@ -23,6 +23,12 @@ export default class UserDto {
   name: string;
 
   @ApiProperty({
+    example: 'jdhasudsand,sajd',
+    description: 'Пароль пользователя',
+  })
+  password: string;
+
+  @ApiProperty({
     example: 'Иванов',
     description: 'Фамилия пользователя',
   })
@@ -76,6 +82,7 @@ export default class UserDto {
   constructor(model: IUser | any) {
     this.email = model.email;
     this._id = model._id;
+    this.password = model.password;
     this.name = model.name;
     this.lastName = model.lastName;
     this.isActivated = model.isActivated;

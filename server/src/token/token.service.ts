@@ -48,13 +48,13 @@ export class TokenService {
   }
 
   // Найти токен
-  async findToken(refreshToken: string): Promise<Token> {
-    return await this.model.findOne({ token: refreshToken });
+  async findToken(refresh_token: string): Promise<Token> {
+    return await this.model.findOne({ token: refresh_token });
   }
 
   // Удалить токен
-  async deleteToken(refreshToken: string): Promise<Token> {
-    return await this.model.findOneAndDelete({ token: refreshToken });
+  async deleteToken(refresh_token: string): Promise<Token> {
+    return await this.model.findOneAndDelete({ token: refresh_token });
   }
 
   // Удалить все токены по ID пользователя
