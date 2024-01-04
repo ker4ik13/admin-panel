@@ -4,5 +4,5 @@ import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Телеграм бот')
 @UseGuards(JwtAuthGuard)
-@Controller('api/bot')
+@Controller('bot')
 export class BotController {}

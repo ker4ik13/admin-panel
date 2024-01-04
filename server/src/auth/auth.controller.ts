@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { LoginUserDto } from '@user/dto/loginUser.dto';
 import RegisterUserDro from '@user/dto/registerUser.dto';
+import { UserResponse } from '@user/dto/responses';
 import UserDto from '@user/dto/user.dto';
 import { Response } from 'express';
 import { Tokens } from 'src/types/ITokens';
@@ -28,7 +29,7 @@ const REFRESH_TOKEN = 'refreshToken';
 
 @Public()
 @ApiTags('Авторизация')
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -53,7 +54,6 @@ export class AuthController {
         message: ['Ошибка при входе'],
       });
     }
-    console.log(tokens);
     this.setRefreshTokenInCookies(tokens, res);
   }
 
@@ -61,8 +61,8 @@ export class AuthController {
   @ApiResponse({ status: 201, type: UserDto })
   @UsePipes(ValidationPipe)
   @Post('register')
-  async register(@Body() userDto: RegisterUserDro, @UserAgent() agent: string) {
-    const user = await this.authService.register(userDto, agent);
+  async register(@Body() userDto: RegisterUserDro) {
+    const user = await this.authService.register(userDto);
 
     if (!user) {
       throw new BadRequestException({
@@ -70,7 +70,7 @@ export class AuthController {
       });
     }
 
-    return user;
+    return new UserResponse(user);
   }
 
   @ApiOperation({ summary: 'Обновление токенов' })
@@ -91,7 +91,9 @@ export class AuthController {
     const tokens = await this.authService.refreshTokens(refreshToken, agent);
 
     if (!tokens) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        message: ['Ошибка обновления токенов'],
+      });
     }
 
     this.setRefreshTokenInCookies(tokens, res);

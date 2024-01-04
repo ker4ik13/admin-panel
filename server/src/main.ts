@@ -8,6 +8,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   app.use(cookieParser());
+  app.setGlobalPrefix('api');
+  app.useGlobalInterceptors();
 
   const PORT = configService.get('PORT') || 3002;
 

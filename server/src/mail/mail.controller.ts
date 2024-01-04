@@ -6,7 +6,7 @@ import { NewsletterDto } from './dto/newsletter.dto';
 import { MailService } from './mail.service';
 
 @UseGuards(JwtAuthGuard)
-@Controller('api')
+@Controller()
 export class MailController {
   constructor(readonly mailService: MailService) {}
 

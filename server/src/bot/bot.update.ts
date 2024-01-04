@@ -84,7 +84,7 @@ export class BotUpdate {
 
       if (user) {
         user.telegramId = ctx.session.telegramId;
-        await user.save();
+        this.userService.updateUserByEmail(email, user);
         ctx.session.email = email;
         await ctx.replyWithHTML(
           `Телеграм успешно подключен к вашему аккаунту.${userReply(user)}`,

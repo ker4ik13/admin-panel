@@ -13,6 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly configService: ConfigService,
     private readonly userService: UserService,
   ) {
+    console.log('super strategy');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -27,9 +28,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         this.logger.error(err);
         return null;
       });
+
     if (!user || user.isBanned) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        message: ['Вы не авторизованы'],
+      });
     }
+
     return payload;
   }
 }

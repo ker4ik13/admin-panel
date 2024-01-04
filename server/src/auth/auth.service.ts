@@ -7,9 +7,11 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '@user/dto/loginUser.dto';
 import RegisterUserDro from '@user/dto/registerUser.dto';
+import { UserResponse } from '@user/dto/responses';
 import { UserDocument } from '@user/user.schema';
 import { UserService } from '@user/user.service';
 import * as bcrypt from 'bcryptjs';
+import { Types } from 'mongoose';
 import { Token } from 'src/token/token.schema';
 import { TokenService } from 'src/token/token.service';
 import { Tokens } from 'src/types/ITokens';
@@ -26,7 +28,7 @@ export class AuthService {
 
   // Вход
   async login(userDto: LoginUserDto, agent: string) {
-    const user: UserDocument = await this.validateUser(userDto);
+    const user = await this.validateUser(userDto);
 
     if (!user) {
       throw new UnauthorizedException({
@@ -38,7 +40,7 @@ export class AuthService {
   }
 
   // Регистрация
-  async register(userDto: RegisterUserDro, agent: string) {
+  async register(userDto: RegisterUserDro): Promise<UserDocument> {
     // Проверка, есть ли пользователь с таким email в Базе Данных
     const candidate = await this.userService
       .getUserByEmail(userDto.email)
@@ -55,7 +57,7 @@ export class AuthService {
       });
     }
 
-    const user: UserDocument = await this.userService
+    return await this.userService
       .registerUser({
         ...userDto,
         createdAt: new Date().toISOString(),
@@ -64,20 +66,21 @@ export class AuthService {
         this.logger.error(err);
         return null;
       });
-
-    return await this.generateTokens(user, agent);
   }
 
   // Создание токенов
-  private async generateTokens(user: UserDocument, agent: string) {
+  private async generateTokens(
+    user: UserDocument | UserResponse,
+    agent: string,
+  ) {
     const payload = {
       email: user.email,
-      _id: user.id,
+      _id: user._id,
       roles: user.roles,
     };
 
     const accessToken = `Bearer ${this.jwtService.sign(payload)}`;
-    const refreshToken = await this.getRefreshToken(user.id, agent);
+    const refreshToken = await this.getRefreshToken(user._id, agent);
 
     return {
       accessToken,
@@ -107,7 +110,10 @@ export class AuthService {
   }
 
   // Создание refresh токена
-  private async getRefreshToken(userId: string, agent: string): Promise<Token> {
+  private async getRefreshToken(
+    userId: string | Types.ObjectId,
+    agent: string,
+  ): Promise<Token> {
     return this.tokenService.getRefreshToken(userId, agent);
   }
 
@@ -125,10 +131,12 @@ export class AuthService {
 
     // Если истекла дата токена
     if (new Date(token.exp) < new Date()) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({
+        message: ['Дата токена истекла'],
+      });
     }
 
-    const user: UserDocument = await this.userService.getUserById(token.userId);
+    const user = await this.userService.getUserById(token.userId);
 
     return this.generateTokens(user, agent);
   }

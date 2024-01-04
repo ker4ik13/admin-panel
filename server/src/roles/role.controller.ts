@@ -1,5 +1,5 @@
 import { Roles } from '@auth/decorators';
-import { JwtAuthGuard, RolesGuard } from '@auth/guards';
+import { RolesGuard } from '@auth/guards';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserRoles } from 'src/types/UserRoles';
@@ -8,8 +8,7 @@ import { Role } from './role.schema';
 import { RoleService } from './role.service';
 
 @ApiTags('Роли пользователей')
-@UseGuards(JwtAuthGuard)
-@Controller('api')
+@Controller()
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 

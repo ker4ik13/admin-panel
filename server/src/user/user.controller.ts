@@ -17,8 +17,9 @@ import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
 import { UserService } from './user.service';
 
+// FIXME: исправить конфликты с пользователями, UserResponse отдает без пароля, просмотреть все кейсы
 @ApiTags('Пользователи')
-@Controller('api')
+@Controller()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -27,11 +28,9 @@ export class UserController {
     summary: `Получить всех пользователей. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
   })
   @ApiResponse({ status: 200, type: [UserDto] })
-  @Roles(UserRoles.Creator, UserRoles.Admin)
-  @UseGuards(RolesGuard)
   @Get('users')
-  getAllUsers() {
-    return this.userService.getAllUsers();
+  async getAllUsers() {
+    return await this.userService.getAllUsers();
   }
 
   // Получение пользователя по ID
@@ -91,9 +90,7 @@ export class UserController {
     required: true,
     type: Object,
   })
-  @UseGuards(RolesGuard)
-  @Roles(UserRoles.Creator, UserRoles.Admin)
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, type: UserDto })
   @Post('users/role')
   addRole(@Body() dto: AddRoleDto) {
     return this.userService.addRole(dto);
@@ -109,8 +106,6 @@ export class UserController {
     required: true,
     type: String,
   })
-  @Roles(UserRoles.Creator, UserRoles.Admin)
-  @UseGuards(RolesGuard)
   @ApiResponse({ status: 200 })
   @Post('users/ban')
   ban(@Body() dto: BanUserDto) {

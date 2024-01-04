@@ -13,6 +13,7 @@ import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
 import RegisterUserDro from './dto/registerUser.dto';
+import { UserResponse } from './dto/responses';
 import { User, UserDocument } from './user.schema';
 
 @Injectable()
@@ -24,7 +25,9 @@ export class UserService {
   ) {}
 
   async registerUser(userDto: RegisterUserDro) {
-    const role = await this.roleService.createRole({
+    // Находим роль пользователя, если нет – создается новая
+
+    const role = await this.roleService.getRoleByValueOrCreate({
       value: UserRoles.User,
       label: UserRolesLabels.User,
     });
@@ -38,11 +41,11 @@ export class UserService {
       roles: [role.id],
     };
 
-    const addedUser = await this.model.create(newUser);
-    const returnUser: UserDocument = await addedUser.populate('roles');
+    const addedUser = (await this.model.create(newUser)).populate('roles');
+    const returnUser: UserDocument = await addedUser;
     this.mailService.newUser(returnUser);
     // TODO: сделать отправку в телеграм
-    return returnUser;
+    return addedUser;
   }
 
   // Активация аккаунта
@@ -58,34 +61,58 @@ export class UserService {
     return activatedUser;
   }
 
-  async getAllUsers() {
-    return await this.model.find().populate('roles').exec();
+  async getAllUsers(): Promise<UserResponse[]> {
+    const users = await this.model.find().populate('roles').exec();
+    const allUsers: UserResponse[] = users.map(
+      (user) => new UserResponse(user),
+    );
+    return allUsers;
   }
 
-  async getUserById(id: string | Types.ObjectId) {
-    return await this.model.findById(id).populate('roles').exec();
+  async getUserById(id: string | Types.ObjectId): Promise<UserResponse> {
+    return new UserResponse(
+      await this.model.findById(id).populate('roles').exec(),
+    );
   }
 
-  async deleteUserById(id: string) {
-    return await this.model.findByIdAndDelete(id).populate('roles').exec();
+  async deleteUserById(id: string): Promise<UserResponse> {
+    return new UserResponse(
+      await this.model
+        .findByIdAndDelete(id, { multi: true })
+        .populate('roles')
+        .exec(),
+    );
   }
 
-  async updateUserById(id: string, body: UserDto) {
-    return await this.model
-      .findByIdAndUpdate(id, body, { new: true })
-      .populate('roles')
-      .exec();
+  async updateUserById(id: string, body: UserDto): Promise<UserResponse> {
+    return new UserResponse(
+      await this.model
+        .findByIdAndUpdate(id, body, { new: true })
+        .populate('roles')
+        .exec(),
+    );
+  }
+
+  async updateUserByEmail(
+    email: string,
+    body: UserDto | UserResponse | User,
+  ): Promise<UserResponse> {
+    return new UserResponse(
+      await this.model
+        .findOneAndUpdate({ email }, body, { new: true })
+        .populate('roles')
+        .exec(),
+    );
   }
 
   async getUserByEmail(email: string) {
     return await this.model.findOne({ email: email }).populate('roles').exec();
   }
 
-  async getUserByTelegramId(id: number) {
-    return await this.model
-      .findOne({ telegramId: id })
-      .populate('roles')
-      .exec();
+  async getUserByTelegramId(id: number): Promise<UserResponse> {
+    return new UserResponse(
+      await this.model.findOne({ telegramId: id }).populate('roles').exec(),
+    );
   }
 
   async addRole(dto: AddRoleDto) {
@@ -95,7 +122,7 @@ export class UserService {
     if (role && user) {
       user.roles.push(role.id);
       await user.save();
-      return dto;
+      return new UserResponse(user);
     }
 
     throw new NotFoundException({
@@ -120,7 +147,7 @@ export class UserService {
       user.isBanned = true;
       user.banReason = dto.banReason;
       await user.save();
-      return user;
+      return new UserResponse(user);
     } catch (error) {
       throw new NotFoundException({
         message: ['Пользователь не был найден'],
@@ -142,7 +169,7 @@ export class UserService {
       user.isBanned = false;
       user.banReason = '';
       await user.save();
-      return user;
+      return new UserResponse(user);
     } catch (error) {
       throw new NotFoundException({
         message: ['Пользователь не был найден'],

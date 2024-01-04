@@ -1,13 +1,13 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from './user.schema';
-import { Role, RoleSchema } from 'src/roles/role.schema';
-import { UserRole, UserRoleSchema } from 'src/roles/user-role.schema';
-import { RoleModule } from 'src/roles/role.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
+import { RoleModule } from 'src/roles/role.module';
+import { Role, RoleSchema } from 'src/roles/role.schema';
+import { UserRole, UserRoleSchema } from 'src/roles/user-role.schema';
+import { UserController } from './user.controller';
+import { User, UserSchema } from './user.schema';
+import { UserService } from './user.service';
 
 @Module({
   imports: [

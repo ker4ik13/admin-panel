@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { add } from 'date-fns';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { v4 } from 'uuid';
 import { Token } from './token.schema';
 
@@ -10,7 +10,10 @@ export class TokenService {
   constructor(@InjectModel(Token.name) private model: Model<Token>) {}
 
   // Создание refresh токена
-  async getRefreshToken(userId: string, agent: string): Promise<Token> {
+  async getRefreshToken(
+    userId: string | Types.ObjectId,
+    agent: string,
+  ): Promise<Token> {
     const _token = await this.model.findOne({
       userId,
       userAgent: agent,
