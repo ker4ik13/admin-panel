@@ -12,7 +12,6 @@ import { MailService } from 'src/mail/mail.service';
 import { RoleService } from 'src/roles/role.service';
 import { TokenService } from 'src/token/token.service';
 import { IJwtPayload } from 'src/types/IJwtPayload';
-import { IRole } from 'src/types/IRole';
 import { UserRoles, UserRolesLabels } from 'src/types/UserRoles';
 import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
@@ -99,7 +98,17 @@ export class UserService {
     );
   }
 
-  async updateUserById(id: string, body: UserDto): Promise<UserResponse> {
+  async updateUserById(
+    id: string,
+    body: UserDto,
+    user: IJwtPayload,
+  ): Promise<UserResponse> {
+    if (user._id !== id && !isRoleIncludes(UserRoles.Creator, user.roles)) {
+      throw new ForbiddenException({
+        message: ['У вас недостаточно прав'],
+      });
+    }
+
     return new UserResponse(
       await this.model
         .findByIdAndUpdate(id, body, { new: true })
@@ -147,16 +156,7 @@ export class UserService {
   }
 
   // Забанить пользователя
-  async ban(dto: BanUserDto, roles: IRole[]) {
-    if (
-      !isRoleIncludes(UserRoles.Creator, roles) &&
-      !isRoleIncludes(UserRoles.Admin, roles)
-    ) {
-      throw new ForbiddenException({
-        message: ['У вас недостаточно прав'],
-      });
-    }
-
+  async ban(dto: BanUserDto) {
     try {
       const user = await this.model
         .findById(dto.userId)
@@ -181,16 +181,7 @@ export class UserService {
   }
 
   // Разбанить пользователя
-  async unban(id: string, roles: IRole[]) {
-    if (
-      !isRoleIncludes(UserRoles.Creator, roles) &&
-      !isRoleIncludes(UserRoles.Admin, roles)
-    ) {
-      throw new ForbiddenException({
-        message: ['У вас недостаточно прав'],
-      });
-    }
-
+  async unban(id: string) {
     try {
       const user = await this.model.findById(id).populate('roles').exec();
 

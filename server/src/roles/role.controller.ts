@@ -1,5 +1,5 @@
-import { Roles } from '@auth/decorators';
 import { RolesGuard } from '@auth/guards';
+import { Roles } from '@common/decorators';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserRoles } from 'src/types/UserRoles';

@@ -1,4 +1,6 @@
 import { CurrentUser } from '@auth/decorators';
+import { RolesGuard } from '@auth/guards';
+import { Roles } from '@common/decorators';
 import {
   Body,
   Controller,
@@ -8,17 +10,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IJwtPayload } from 'src/types/IJwtPayload';
-import { IRole } from 'src/types/IRole';
 import { UserRoles } from 'src/types/UserRoles';
 import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
 import { BanUserDto } from './dto/banUser.dto';
 import { UserService } from './user.service';
 
-// FIXME: исправить конфликты с пользователями, UserResponse отдает без пароля, просмотреть все кейсы
+// TODO: разбить по ролям
 @ApiTags('Пользователи')
 @Controller()
 export class UserController {
@@ -29,6 +31,8 @@ export class UserController {
     summary: `Получить всех пользователей. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
   })
   @ApiResponse({ status: HttpStatus.OK, type: [UserDto] })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator, UserRoles.Admin)
   @Get('users')
   async getAllUsers() {
     return await this.userService.getAllUsers();
@@ -51,7 +55,7 @@ export class UserController {
   }
 
   // Удаление пользователя по ID
-  @ApiOperation({ summary: 'Удалить пользователя по ID' })
+  @ApiOperation({ summary: `Удалить пользователя по ID.` })
   @ApiParam({
     name: 'id',
     example: 'k34jjnsdfusa8i#3ddr3',
@@ -59,6 +63,7 @@ export class UserController {
     type: String,
   })
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
+  @UseGuards(RolesGuard)
   @Delete('users/:id')
   deleteUserById(@Param('id') id: string, @CurrentUser() user: IJwtPayload) {
     return this.userService.deleteUserById(id, user);
@@ -74,8 +79,12 @@ export class UserController {
   })
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
   @Patch('users/:id')
-  updateUserById(@Param('id') id: string, @Body() userDto: UserDto) {
-    return this.userService.updateUserById(id, userDto);
+  updateUserById(
+    @Param('id') id: string,
+    @Body() userDto: UserDto,
+    @CurrentUser() user: IJwtPayload,
+  ) {
+    return this.userService.updateUserById(id, userDto, user);
   }
 
   // Выдать роль пользователю
@@ -109,8 +118,8 @@ export class UserController {
   })
   @ApiResponse({ status: HttpStatus.OK })
   @Post('users/ban')
-  ban(@Body() dto: BanUserDto, @CurrentUser('roles') roles: IRole[]) {
-    return this.userService.ban(dto, roles);
+  ban(@Body() dto: BanUserDto) {
+    return this.userService.ban(dto);
   }
 
   // Разбанить пользователя
@@ -124,9 +133,11 @@ export class UserController {
     type: String,
   })
   @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator, UserRoles.Admin)
   @Post('users/unban/:id')
-  unban(@Param('id') id: string, @CurrentUser('roles') roles: IRole[]) {
-    return this.userService.unban(id, roles);
+  unban(@Param('id') id: string) {
+    return this.userService.unban(id);
   }
 
   // Получить себя
