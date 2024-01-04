@@ -56,4 +56,9 @@ export class TokenService {
   async deleteToken(refreshToken: string): Promise<Token> {
     return await this.model.findOneAndDelete({ token: refreshToken });
   }
+
+  // Удалить все токены по ID пользователя
+  async deleteAllTokensByUserId(userId: string) {
+    return await this.model.deleteMany({ userId }, { new: true, multi: true });
+  }
 }

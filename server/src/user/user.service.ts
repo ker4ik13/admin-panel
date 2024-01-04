@@ -1,13 +1,18 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { Model, Types } from 'mongoose';
+import { isRoleIncludes } from 'src/libs/helpers';
 import { MailService } from 'src/mail/mail.service';
 import { RoleService } from 'src/roles/role.service';
+import { TokenService } from 'src/token/token.service';
+import { IJwtPayload } from 'src/types/IJwtPayload';
+import { IRole } from 'src/types/IRole';
 import { UserRoles, UserRolesLabels } from 'src/types/UserRoles';
 import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
@@ -20,8 +25,9 @@ import { User, UserDocument } from './user.schema';
 export class UserService {
   constructor(
     @InjectModel(User.name) private model: Model<User>,
-    readonly roleService: RoleService,
+    private readonly roleService: RoleService,
     private readonly mailService: MailService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async registerUser(userDto: RegisterUserDro) {
@@ -75,7 +81,16 @@ export class UserService {
     );
   }
 
-  async deleteUserById(id: string): Promise<UserResponse> {
+  async deleteUserById(id: string, user: IJwtPayload): Promise<UserResponse> {
+    if (user._id !== id && !isRoleIncludes(UserRoles.Creator, user.roles)) {
+      throw new ForbiddenException({
+        message: ['У вас недостаточно прав'],
+      });
+    }
+
+    // Удаление токенов пользователя
+    await this.tokenService.deleteAllTokensByUserId(id);
+
     return new UserResponse(
       await this.model
         .findByIdAndDelete(id, { multi: true })
@@ -121,8 +136,9 @@ export class UserService {
 
     if (role && user) {
       user.roles.push(role.id);
-      await user.save();
-      return new UserResponse(user);
+      const newUser = await user.save();
+      const userWithRoles = await newUser.populate('roles');
+      return new UserResponse(userWithRoles);
     }
 
     throw new NotFoundException({
@@ -130,8 +146,17 @@ export class UserService {
     });
   }
 
-  // Бан пользователя
-  async ban(dto: BanUserDto) {
+  // Забанить пользователя
+  async ban(dto: BanUserDto, roles: IRole[]) {
+    if (
+      !isRoleIncludes(UserRoles.Creator, roles) &&
+      !isRoleIncludes(UserRoles.Admin, roles)
+    ) {
+      throw new ForbiddenException({
+        message: ['У вас недостаточно прав'],
+      });
+    }
+
     try {
       const user = await this.model
         .findById(dto.userId)
@@ -155,8 +180,17 @@ export class UserService {
     }
   }
 
-  // Разюан пользователя
-  async unban(id: string) {
+  // Разбанить пользователя
+  async unban(id: string, roles: IRole[]) {
+    if (
+      !isRoleIncludes(UserRoles.Creator, roles) &&
+      !isRoleIncludes(UserRoles.Admin, roles)
+    ) {
+      throw new ForbiddenException({
+        message: ['У вас недостаточно прав'],
+      });
+    }
+
     try {
       const user = await this.model.findById(id).populate('roles').exec();
 
@@ -166,10 +200,16 @@ export class UserService {
         });
       }
 
-      user.isBanned = false;
-      user.banReason = '';
-      await user.save();
-      return new UserResponse(user);
+      const newUser = await this.model
+        .findOneAndUpdate(
+          { _id: id },
+          { $unset: { isBanned: 1, banReason: 1 } },
+          { new: true },
+        )
+        .populate('roles')
+        .exec();
+
+      return new UserResponse(newUser);
     } catch (error) {
       throw new NotFoundException({
         message: ['Пользователь не был найден'],

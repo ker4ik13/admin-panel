@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type TokenDocument = HydratedDocument<Token>;
 
@@ -22,9 +22,9 @@ export class Token {
     ref: 'User',
     required: true,
   })
-  userId: Types.ObjectId;
+  userId: string;
 
-  @Prop({})
+  @Prop()
   userAgent: string;
 }
 

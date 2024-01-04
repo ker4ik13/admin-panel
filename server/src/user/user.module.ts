@@ -5,6 +5,7 @@ import { MailModule } from 'src/mail/mail.module';
 import { RoleModule } from 'src/roles/role.module';
 import { Role, RoleSchema } from 'src/roles/role.schema';
 import { UserRole, UserRoleSchema } from 'src/roles/user-role.schema';
+import { TokenModule } from 'src/token/token.module';
 import { UserController } from './user.controller';
 import { User, UserSchema } from './user.schema';
 import { UserService } from './user.service';
@@ -19,6 +20,7 @@ import { UserService } from './user.service';
     ]),
     RoleModule,
     MailModule,
+    TokenModule,
   ],
   controllers: [UserController],
   providers: [UserService],

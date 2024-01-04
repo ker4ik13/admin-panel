@@ -1,4 +1,4 @@
-import { Roles } from '@auth/decorators';
+import { CurrentUser, Roles } from '@auth/decorators';
 import { RolesGuard } from '@auth/guards';
 import {
   Body,
@@ -11,6 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IJwtPayload } from 'src/types/IJwtPayload';
+import { IRole } from 'src/types/IRole';
 import { UserRoles } from 'src/types/UserRoles';
 import UserDto from 'src/user/dto/user.dto';
 import { AddRoleDto } from './dto/addRole.dto';
@@ -59,8 +61,8 @@ export class UserController {
   })
   @ApiResponse({ status: 200, type: UserDto })
   @Delete('users/:id')
-  deleteUserById(@Param('id') id: string) {
-    return this.userService.deleteUserById(id);
+  deleteUserById(@Param('id') id: string, @CurrentUser() user: IJwtPayload) {
+    return this.userService.deleteUserById(id, user);
   }
 
   // Изменение пользователя по ID
@@ -108,8 +110,8 @@ export class UserController {
   })
   @ApiResponse({ status: 200 })
   @Post('users/ban')
-  ban(@Body() dto: BanUserDto) {
-    return this.userService.ban(dto);
+  ban(@Body() dto: BanUserDto, @CurrentUser('roles') roles: IRole[]) {
+    return this.userService.ban(dto, roles);
   }
 
   // Разбанить пользователя
@@ -126,7 +128,7 @@ export class UserController {
   @UseGuards(RolesGuard)
   @ApiResponse({ status: 200 })
   @Post('users/unban/:id')
-  unban(@Param('id') id: string) {
-    return this.userService.unban(id);
+  unban(@Param('id') id: string, @CurrentUser('roles') roles: IRole[]) {
+    return this.userService.unban(id, roles);
   }
 }
