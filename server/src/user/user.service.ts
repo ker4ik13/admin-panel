@@ -1,6 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Inject,
   Injectable,
@@ -119,7 +120,7 @@ export class UserService {
   }
 
   async deleteUserById(id: string, user: IJwtPayload): Promise<UserResponse> {
-    if (user._id !== id && !isRoleIncludes(UserRoles.Creator, user.roles)) {
+    if (user._id !== id && !isRoleIncludes([UserRoles.Creator], user.roles)) {
       throw new ForbiddenException({
         message: ['У вас недостаточно прав'],
       });
@@ -143,7 +144,10 @@ export class UserService {
     body: UserDto,
     user: IJwtPayload,
   ): Promise<UserResponse> {
-    if (user._id !== id && !isRoleIncludes(UserRoles.Creator, user.roles)) {
+    if (
+      user._id !== id &&
+      !isRoleIncludes([UserRoles.Creator, UserRoles.Admin], user.roles)
+    ) {
       throw new ForbiddenException({
         message: ['У вас недостаточно прав'],
       });
@@ -170,7 +174,7 @@ export class UserService {
   }
 
   async addRole(dto: AddRoleDto) {
-    const user = await this.model.findById(dto.userId);
+    const user: UserDocument = await this.model.findById(dto.userId);
     const role = await this.roleService.getRoleByValue(dto.value);
 
     if (role && user) {
@@ -186,7 +190,7 @@ export class UserService {
   }
 
   // Забанить пользователя
-  async ban(dto: BanUserDto) {
+  async ban(dto: BanUserDto, currentUser: IJwtPayload) {
     try {
       const user = await this.model
         .findById(dto.userId)
@@ -199,8 +203,25 @@ export class UserService {
         });
       }
 
-      user.isBanned = true;
-      user.banReason = dto.banReason;
+      // Нельзя заблокировать себя
+      if (user.id === currentUser._id) {
+        throw new ConflictException({
+          message: ['Вы не можете заблокировать себя'],
+        });
+      }
+
+      // Если роль администратора ниже роли создателя
+      if (
+        isRoleIncludes([UserRoles.Creator], user.roles) &&
+        !isRoleIncludes([UserRoles.Creator], currentUser.roles)
+      ) {
+        throw new ForbiddenException({
+          message: ['У вас нет прав'],
+        });
+      }
+
+      user.isBlocked = true;
+      user.blockReason = dto.blockReason;
       await user.save();
       return new UserResponse(user);
     } catch (error) {
@@ -224,7 +245,7 @@ export class UserService {
       const newUser = await this.model
         .findOneAndUpdate(
           { _id: id },
-          { $unset: { isBanned: 1, banReason: 1 } },
+          { $unset: { isBlocked: 1, blockReason: 1 } },
           { new: true },
         )
         .populate('roles')

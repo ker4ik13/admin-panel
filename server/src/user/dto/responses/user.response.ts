@@ -1,6 +1,7 @@
 import { User, UserDocument } from '@user/user.schema';
 import { Exclude } from 'class-transformer';
 import { Types } from 'mongoose';
+import { IRole } from 'src/types/IRole';
 
 export class UserResponse implements User {
   _id: Types.ObjectId;
@@ -12,15 +13,13 @@ export class UserResponse implements User {
   @Exclude()
   createdAt: string;
 
-  @Exclude()
   isBlocked: boolean;
 
   updatedAt: string;
-  roles: Types.ObjectId[];
+  roles: IRole[];
   activationLink: string;
-  banReason: string;
+  blockReason: string;
   isActivated: boolean;
-  isBanned: boolean;
   lastName: string;
   name: string;
   photo: string;
@@ -32,8 +31,9 @@ export class UserResponse implements User {
     this.updatedAt = user.updatedAt;
     this.roles = user.roles;
     this.activationLink = user.activationLink;
-    this.banReason = user.banReason;
+    this.blockReason = user.blockReason;
     this.lastName = user.lastName;
+    this.isBlocked = user.isBlocked;
     this.name = user.name;
     this.photo = user.photo;
     this.telegramId = user.telegramId;

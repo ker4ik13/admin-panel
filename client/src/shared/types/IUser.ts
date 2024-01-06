@@ -1,4 +1,4 @@
-import { IRole } from './IRole';
+import { IRole } from "./IRole";
 
 export interface IUser {
   _id: string;
@@ -11,6 +11,6 @@ export interface IUser {
   isActivated: boolean;
   activationLink?: string;
   createdAt: string;
-  isBanned?: boolean;
-  banReason?: string;
+  isBlocked?: boolean;
+  blockReason?: string;
 }

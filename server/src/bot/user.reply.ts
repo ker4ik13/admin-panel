@@ -2,7 +2,11 @@ import { User } from 'src/user/user.schema';
 
 export const userReply = (user: User) => {
   return `
-	${user.isBanned ? `<b>Аккаунт забанен!</b>\nПричина: ${user.banReason}\n` : ''}
+	${
+    user.isBlocked
+      ? `<b>Аккаунт забанен!</b>\nПричина: ${user.blockReason}\n`
+      : ''
+  }
 	<b>Имя:</b> ${user.name}
 	<b>Фамилия:</b> ${user.lastName}
 	<b>Email:</b> ${user.email}

@@ -40,7 +40,7 @@ export class UserController {
 
   // Получение пользователя по ID
   @ApiOperation({
-    summary: `Получить пользователя по ID`,
+    summary: `Получить пользователя по ID. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
   })
   @ApiParam({
     name: 'id',
@@ -49,6 +49,8 @@ export class UserController {
     type: String,
   })
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator, UserRoles.Admin)
   @Get('users/:id')
   getUserById(@Param('id') id: string) {
     return this.userService.getUserById(id);
@@ -70,7 +72,9 @@ export class UserController {
   }
 
   // Изменение пользователя по ID
-  @ApiOperation({ summary: 'Изменить пользователя по ID' })
+  @ApiOperation({
+    summary: `Изменить пользователя по ID. Доступен для своего аккаунта и с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+  })
   @ApiParam({
     name: 'id',
     example: 'k34jjnsdfusa8i#3ddr3',
@@ -89,7 +93,7 @@ export class UserController {
 
   // Выдать роль пользователю
   @ApiOperation({
-    summary: `Выдать роль пользователю. Доступен с ролями: ${UserRoles.Creator}, ${UserRoles.Admin}`,
+    summary: `Выдать роль пользователю. Доступен с ролями: ${UserRoles.Creator}`,
   })
   @ApiParam({
     name: 'role',
@@ -101,6 +105,8 @@ export class UserController {
     type: Object,
   })
   @ApiResponse({ status: HttpStatus.OK, type: UserDto })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator)
   @Post('users/role')
   addRole(@Body() dto: AddRoleDto) {
     return this.userService.addRole(dto);
@@ -117,9 +123,11 @@ export class UserController {
     type: String,
   })
   @ApiResponse({ status: HttpStatus.OK })
+  @UseGuards(RolesGuard)
+  @Roles(UserRoles.Creator, UserRoles.Admin)
   @Post('users/ban')
-  ban(@Body() dto: BanUserDto) {
-    return this.userService.ban(dto);
+  ban(@Body() dto: BanUserDto, @CurrentUser() user: IJwtPayload) {
+    return this.userService.ban(dto, user);
   }
 
   // Разбанить пользователя

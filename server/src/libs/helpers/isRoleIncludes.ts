@@ -1,10 +1,13 @@
 import { IRole } from 'src/types/IRole';
 
-export const isRoleIncludes = (needRole: string, roles: IRole[]): boolean => {
+export const isRoleIncludes = (
+  needRoles: string[],
+  roles: IRole[],
+): boolean => {
   let isIncludes = false;
 
   roles.forEach((role) => {
-    if (role.value === needRole) {
+    if (needRoles.includes(role.value)) {
       isIncludes = true;
     }
   });

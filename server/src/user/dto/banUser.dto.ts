@@ -6,5 +6,5 @@ export class BanUserDto {
     message: 'Сообщение должно быть длинной минимум 1 символ',
   })
   @IsString({ message: 'Сообщение должно быть строкой' })
-  readonly banReason: string;
+  readonly blockReason: string;
 }
