@@ -32,3 +32,10 @@ body {
   min-height: 100vh;
   background-color: var(--bg-color-light-main);
 }
+.error_text {
+  text-align: center;
+  color: rgb(var(--red));
+  font-size: 1rem;
+  margin-bottom: 0.625rem;
+  cursor: text;
+}

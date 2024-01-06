@@ -52,28 +52,32 @@ const items: MenuItem[] = [
     null,
     [
       getItem(
-        <Link href="/">{translate.sidebar.dashboard[language]}</Link>,
-        "/",
+        <Link href="/admin/dashboard">
+          {translate.sidebar.dashboard[language]}
+        </Link>,
+        "/admin/dashboard",
         <LuLayoutDashboard />
       ),
       getItem(
-        <Link href="/orders">{translate.sidebar.orders[language]}</Link>,
-        "/orders",
+        <Link href="/admin/orders">{translate.sidebar.orders[language]}</Link>,
+        "/admin/orders",
         <MdOutlineWorkOutline />
       ),
       getItem(
-        <Link href="/users">{translate.sidebar.users[language]}</Link>,
-        "/users",
+        <Link href="/admin/users">{translate.sidebar.users[language]}</Link>,
+        "/admin/users",
         <FaRegUser />
       ),
       getItem(
-        <Link href="/articles">{translate.sidebar.articles[language]}</Link>,
-        "/articles",
+        <Link href="/admin/articles">
+          {translate.sidebar.articles[language]}
+        </Link>,
+        "/admin/articles",
         <MdOutlineArticle />
       ),
       getItem(
-        <Link href="/wallet">{translate.sidebar.wallet[language]}</Link>,
-        "/wallet",
+        <Link href="/admin/wallet">{translate.sidebar.wallet[language]}</Link>,
+        "/admin/wallet",
         <IoWalletOutline />
       ),
     ],
@@ -86,13 +90,17 @@ const items: MenuItem[] = [
     null,
     [
       getItem(
-        <Link href="/responses">{translate.sidebar.responses[language]}</Link>,
-        "/responses",
+        <Link href="/admin/responses">
+          {translate.sidebar.responses[language]}
+        </Link>,
+        "/admin/responses",
         <MdOutlineFeedback />
       ),
       getItem(
-        <Link href="/mailings">{translate.sidebar.mailings[language]}</Link>,
-        "/mailings",
+        <Link href="/admin/mailings">
+          {translate.sidebar.mailings[language]}
+        </Link>,
+        "/admin/mailings",
         <IoMailOutline />
       ),
     ],
@@ -104,20 +112,20 @@ const items: MenuItem[] = [
     null,
     [
       getItem(
-        <Link href="/help">{translate.sidebar.help[language]}</Link>,
-        "/help",
+        <Link href="/admin/help">{translate.sidebar.help[language]}</Link>,
+        "/admin/help",
         <IoIosHelpCircleOutline />
       ),
       getItem(
-        <Link href="/documentation">
+        <Link href="/admin/documentation">
           {translate.sidebar.documentation[language]}
         </Link>,
-        "/documentation",
+        "/admin/documentation",
         <IoDocumentOutline />
       ),
       getItem(
-        <Link href="/tools">{translate.sidebar.tools[language]}</Link>,
-        "/tools",
+        <Link href="/admin/tools">{translate.sidebar.tools[language]}</Link>,
+        "/admin/tools",
         <PiToolbox />
       ),
     ],

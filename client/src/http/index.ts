@@ -1,24 +1,11 @@
-import type { IUser } from "@/shared/types/IUser";
 import axios from "axios";
 
-export interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
-  user: IUser;
-}
-
-const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Базовый путь
 const $api = axios.create({
   withCredentials: true,
-  baseURL: `${NEXT_PUBLIC_API_URL}/api`,
-});
-
-// Настройка куки
-$api.interceptors.request.use((config) => {
-  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
-  return config;
+  baseURL: `${API_URL}/api`,
 });
 
 $api.interceptors.response.use(
@@ -34,15 +21,12 @@ $api.interceptors.response.use(
     ) {
       originalRequest._isRetry = true;
       try {
-        const response = await axios.get<AuthResponse>(
-          `${NEXT_PUBLIC_API_URL}/refresh`,
-          { withCredentials: true }
-        );
-        localStorage.setItem("token", response.data.access_token);
+        await axios.get(`${API_URL}/api/auth/refresh`, {
+          withCredentials: true,
+        });
         return $api.request(originalRequest);
       } catch (e) {
-        // TODO: доделать
-        console.log("НЕ АВТОРИЗОВАН");
+        console.log("Вы не авторизованы");
       }
     }
     throw error;

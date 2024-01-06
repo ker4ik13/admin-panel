@@ -154,7 +154,7 @@ export class UserController {
   })
   @ApiResponse({ status: HttpStatus.OK })
   @Get('me')
-  getMe(@CurrentUser() user: IJwtPayload) {
-    return user;
+  getMe(@CurrentUser('_id') userId: string) {
+    return this.userService.getUserById(userId);
   }
 }

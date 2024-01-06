@@ -79,7 +79,7 @@ export class AuthService {
       roles: user.roles,
     };
 
-    const access_token = `Bearer ${this.jwtService.sign(payload)}`;
+    const access_token = this.jwtService.sign(payload);
     const refresh_token = await this.getRefreshToken(user._id, agent);
 
     return {

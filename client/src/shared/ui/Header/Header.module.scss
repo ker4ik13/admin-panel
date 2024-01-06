@@ -126,6 +126,10 @@
   align-items: center;
   gap: rem(8);
   @include theme-transition();
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  cursor: pointer;
 
   &:hover {
     background-color: rgba(var(--accent), 0.3);

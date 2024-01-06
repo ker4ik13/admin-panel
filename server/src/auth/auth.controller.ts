@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '@common/constants';
 import {
   BadRequestException,
   Body,
@@ -21,12 +22,11 @@ import { LoginUserDto } from '@user/dto/loginUser.dto';
 import RegisterUserDro from '@user/dto/registerUser.dto';
 import { UserResponse } from '@user/dto/responses';
 import UserDto from '@user/dto/user.dto';
+import { add } from 'date-fns';
 import { Response } from 'express';
 import { Tokens } from 'src/types/ITokens';
 import { AuthService } from './auth.service';
 import { Cookie, Public, UserAgent } from './decorators';
-
-const REFRESH_TOKEN = 'refresh_token';
 
 @Public()
 @ApiTags('Авторизация')
@@ -55,7 +55,7 @@ export class AuthController {
         message: ['Ошибка при входе'],
       });
     }
-    this.setRefreshTokenInCookies(tokens, res);
+    this.setTokensInCookie(tokens, res);
   }
 
   @ApiOperation({ summary: 'Регистрация пользователя' })
@@ -76,8 +76,8 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Обновление токенов' })
   @ApiResponse({ status: HttpStatus.CREATED })
-  @ApiCookieAuth('refresh_token')
-  @Post('refresh')
+  @ApiCookieAuth(REFRESH_TOKEN)
+  @Get('refresh')
   async refresh(
     @Cookie(REFRESH_TOKEN) refresh_token: string,
     @Res() res: Response,
@@ -97,12 +97,12 @@ export class AuthController {
       });
     }
 
-    this.setRefreshTokenInCookies(tokens, res);
+    this.setTokensInCookie(tokens, res);
   }
 
   @ApiOperation({ summary: 'Выход пользователя' })
   @ApiResponse({ status: HttpStatus.OK })
-  @ApiCookieAuth('refresh_token')
+  @ApiCookieAuth(REFRESH_TOKEN)
   @Get('logout')
   async logout(
     @Cookie(REFRESH_TOKEN) refresh_token: string,
@@ -113,8 +113,15 @@ export class AuthController {
       return;
     }
 
+    // Удаление токенов
     await this.authService.deleteRefreshToken(refresh_token);
     res.cookie(REFRESH_TOKEN, '', {
+      httpOnly: true,
+      secure: true,
+      expires: new Date(),
+    });
+
+    res.cookie(ACCESS_TOKEN, '', {
       httpOnly: true,
       secure: true,
       expires: new Date(),
@@ -123,7 +130,7 @@ export class AuthController {
     res.sendStatus(HttpStatus.OK);
   }
 
-  private setRefreshTokenInCookies(tokens: Tokens, res: Response) {
+  private setTokensInCookie(tokens: Tokens, res: Response) {
     if (!tokens) {
       throw new UnauthorizedException({
         message: ['Вы не авторизованы'],
@@ -139,6 +146,15 @@ export class AuthController {
       path: '/',
     });
 
-    res.status(HttpStatus.CREATED).json({ access_token: tokens.access_token });
+    res.cookie(ACCESS_TOKEN, tokens.access_token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      expires: add(new Date(), { minutes: 10 }),
+      secure:
+        this.configService.get('NODE_ENV', 'development') === 'production',
+      path: '/',
+    });
+
+    res.sendStatus(HttpStatus.CREATED);
   }
 }

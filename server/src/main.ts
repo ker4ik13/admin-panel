@@ -10,6 +10,11 @@ async function bootstrap() {
   app.use(cookieParser());
   app.setGlobalPrefix('api');
   app.useGlobalInterceptors();
+  app.enableCors({
+    credentials: true,
+    origin: [process.env.CLIENT_URL],
+    methods: ['GET', 'POST', 'DELETE', 'PATCH'],
+  });
 
   const PORT = configService.get('PORT') || 3002;
 

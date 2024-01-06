@@ -41,10 +41,5 @@ export default class RegisterUserDto {
     description: 'Фамилия пользователя',
   })
   readonly lastName: string;
-
-  @ApiProperty({
-    example: '2023-12-20T15:09:55.204Z',
-    description: 'Дата создания аккаунта',
-  })
   readonly createdAt: string = new Date().toISOString();
 }

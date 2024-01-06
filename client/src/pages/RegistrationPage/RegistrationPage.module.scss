@@ -1,0 +1,35 @@
+@import "@/shared/styles/_vars";
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: rem(400);
+  width: 100%;
+}
+.input {
+  width: 100%;
+}
+.link {
+  text-align: right;
+  text-decoration: none;
+  color: rgb(var(--accent));
+  margin-bottom: rem(20);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.buttonWrapper {
+  width: 100%;
+}
+.button {
+  width: 100%;
+}
